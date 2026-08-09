@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# Temporary PR-only trigger comment; not part of the extraction fingerprint.
 import json
 from pathlib import Path
 from jsonschema import Draft202012Validator, FormatChecker
