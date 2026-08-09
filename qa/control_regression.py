@@ -21,7 +21,9 @@ def session_fixture():
       'pause_state':None,'exception_reason':None,'supersedes_session_id':None
     }
 
-def errors(s): return validate_schema(s,'schemas/session-v1.schema.json') + validate_session(s,PROJECT,MASTERY,{s['session_id']:s})
+def errors(s, all_sessions=None):
+    all_sessions=all_sessions or {s['session_id']:s}
+    return validate_schema(s,'schemas/session-v1.schema.json') + validate_session(s,PROJECT,MASTERY,all_sessions)
 def expect(name, condition): assert condition, name; print('PASS',name)
 
 def main():
@@ -34,7 +36,11 @@ def main():
     s=session_fixture(); s['control_snapshot']['mastery_state_version']='9.9.9'; expect('stale mastery snapshot rejected', any('mastery_state_version mismatch' in x for x in errors(s)))
     s=session_fixture(); s['control_snapshot']['pipeline_fingerprint']='0'*64; expect('stale pipeline fingerprint rejected', any('pipeline_fingerprint mismatch' in x or 'stale governance hash' in x for x in errors(s)))
     s=session_fixture(); s['control_snapshot'].pop('pipeline_health'); expect('missing pipeline snapshot field fails schema', bool(validate_schema(s,'schemas/session-v1.schema.json')))
-    s=session_fixture(); s['predecessor_session_id']='SAP-C02-U00-S000'; s['status']='ACTIVE'; s['started_at']='2026-08-09T09:30:00Z'; expect('successor cannot activate without consumed handoff field', s['consumed_handoff_id'] is None)
+
+    predecessor=session_fixture(); predecessor['session_id']='SAP-C02-U00-S000'; predecessor['status']='COMPLETED'; predecessor['started_at']='2026-08-09T09:00:00Z'; predecessor['ended_at']='2026-08-09T09:20:00Z'; predecessor['completion_qa']='PASS'; predecessor['next_permitted_action']='Next'; predecessor['handoff_id']='HO-SAP-C02-U00-S000-001'
+    s=session_fixture(); s['predecessor_session_id']=predecessor['session_id']; s['status']='ACTIVE'; s['started_at']='2026-08-09T09:30:00Z'
+    all_sessions={predecessor['session_id']:predecessor,s['session_id']:s}
+    expect('successor activation rejects missing handoff consumption', any('ACTIVE successor requires consumed_handoff_id' in x for x in errors(s,all_sessions)))
     print('ALL CONTROL REGRESSIONS PASS')
 
 if __name__=='__main__': main()
