@@ -1,14 +1,14 @@
 {
   "state_type": "PROJECT_STATE",
   "schema_version": "1.0.0",
-  "state_version": "1.0.2",
+  "state_version": "1.0.3",
   "certification": "SAP-C02",
   "exam_scope_version": "2026-08-09",
   "study_status": "READY_TO_START",
   "current_unit": null,
   "active_session_id": null,
   "last_completed_session_id": null,
-  "next_permitted_action": "Obtain explicit user approval to start real SAP-C02 study, then create the first controlled study session from repository state.",
+  "next_permitted_action": "Study start is frozen by explicit user instruction. Do not create or start any real SAP-C02 study session until the user explicitly unfreezes and grants study-start approval. Non-study inspection, validation, tooling, and pipeline demonstrations remain allowed.",
   "control_gate_status": {
     "resource_inventory": "PASS",
     "study_sequence": "PASS",
@@ -20,7 +20,7 @@
     "change_freshness": "PASS",
     "control_plane_ci": "PASS",
     "end_to_end_dry_run": "PASS",
-    "study_start_approval": "PENDING"
+    "study_start_approval": "BLOCKED"
   },
-  "updated_at": "2026-08-09T09:41:00Z"
+  "updated_at": "2026-08-09T09:46:00Z"
 }
