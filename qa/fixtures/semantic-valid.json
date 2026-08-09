@@ -1,0 +1,29 @@
+{
+  "schema_version": "1.0.0",
+  "packet_id": "semantic-regression-vpc-routing",
+  "source_sections": [
+    {"section_id":"overview","architecture_significant":true,"processing_status":"PROCESSED","reason":null,"extracted_claim_ids":["p1"]},
+    {"section_id":"rules","architecture_significant":true,"processing_status":"PROCESSED","reason":null,"extracted_claim_ids":["p2","p3"]},
+    {"section_id":"example","architecture_significant":false,"processing_status":"INTENTIONALLY_EXCLUDED","reason":"Example adds no new provider constraint beyond processed rules.","extracted_claim_ids":[]}
+  ],
+  "extraction_claims": [
+    {"claim_id":"p1","label":"PROVIDER_FACT","text":"Gateway route tables can control supported VPC edge traffic paths.","section_id":"overview","locator":"Overview > gateway route table","severity":"MEDIUM","human_reviewed":true},
+    {"claim_id":"p2","label":"PROVIDER_FACT","text":"Asymmetric routing is not supported for the documented middlebox path.","section_id":"rules","locator":"Rules and considerations > asymmetric routing","severity":"HIGH","human_reviewed":true},
+    {"claim_id":"p3","label":"PROVIDER_FACT","text":"The documented mechanism does not intercept traffic outside the VPC such as attached Transit Gateway traffic.","section_id":"rules","locator":"Rules and considerations > VPC boundary","severity":"HIGH","human_reviewed":true}
+  ],
+  "enrichment_claims": [
+    {"claim_id":"a1","label":"ARCHITECTURAL_INFERENCE","text":"Symmetric return-path design is a first-class high-availability constraint for this insertion pattern.","support_claim_ids":["p2"],"rationale":"The provider explicitly rejects asymmetric routing, so failover and scaling must preserve path symmetry."},
+    {"claim_id":"a2","label":"ARCHITECTURAL_INFERENCE","text":"This mechanism alone is insufficient for centralized inspection of Transit Gateway traffic.","support_claim_ids":["p3"],"rationale":"The provider boundary excludes traffic outside the VPC, including attached Transit Gateway traffic."}
+  ],
+  "conflicts": [],
+  "quality_scores": {
+    "factual_fidelity": 5,
+    "architecture_completeness": 5,
+    "qualifier_preservation": 5,
+    "unsupported_claim_avoidance": 5,
+    "locator_quality": 5,
+    "inference_separation": 5
+  },
+  "repeatability": {"runs_compared":2,"material_semantic_drift":false,"notes":"Independent runs preserved the same architecture-significant facts, boundaries, and derived decisions."},
+  "semantic_status": "PASS"
+}
