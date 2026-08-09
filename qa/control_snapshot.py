@@ -8,7 +8,8 @@ GOVERNANCE=[
 'docs/00-system-charter.md','docs/02-chatgpt-operating-spec.md','docs/03-source-policy.md','docs/04-study-sequence-spec.md',
 'docs/05-extraction-pipeline-spec.md','docs/07-study-artifact-schemas.md','docs/08-quality-assurance-spec.md','docs/09-progress-mastery-spec.md',
 'docs/11-study-session-management.md','docs/12-coordinator-governance.md','docs/13-change-control-freshness.md',
-'docs/14-study-operating-routine.md','docs/15-study-tool-policy.md','docs/16-chat-session-management.md']
+'docs/14-study-operating-routine.md','docs/15-study-tool-policy.md','docs/16-chat-session-management.md','docs/17-pipeline-health-spec.md',
+'state/pipeline-health.json']
 
 def h(rel): return hashlib.sha256((ROOT/rel).read_bytes()).hexdigest()
 
