@@ -116,7 +116,10 @@ jobs:
           . .venv/bin/activate
           python pipeline/make_bundle.py --source work/waf.md --prompt prompts/extract-v1.md --out work/waf-bundle-1.md
           python pipeline/make_bundle.py --source work/waf.md --prompt prompts/extract-v1.md --out work/waf-bundle-2.md
-          cmp work/waf-bundle-1.md work/waf-bundle-2.md
+          python - <<'PY'
+          from pathlib import Path
+          assert Path('work/waf-bundle-1.md').read_bytes() == Path('work/waf-bundle-2.md').read_bytes()
+          PY
 
       - name: Upload normalized smoke outputs
         uses: actions/upload-artifact@v4
