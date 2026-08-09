@@ -1,24 +1,15 @@
 # Study Operating Routine and Retention System
 
-Status: **APPROVED v1 — study start remains frozen**  
+Status: **APPROVED v1.1 — study start remains frozen**  
 Certification pilot: **AWS SAP-C02**  
-Work constraint: **08:00–16:00 employment schedule**
+Work constraint: **SUN–THU, 08:00–16:00 employment schedule**  
+Weekend: **FRI–SAT**
 
 ## Purpose
 
-Define a sustainable study routine that integrates controlled ChatGPT sessions, official-source reading, architecture reasoning, hands-on work, retrieval practice, note-taking, and spaced review without turning study administration into a second job.
-
-The routine optimizes for:
-
-1. long-term retention;
-2. architecture judgment;
-3. exam readiness;
-4. sustainable cognitive load around full-time work;
-5. low administrative overhead.
+Define a sustainable routine integrating controlled ChatGPT sessions, official-source reading, architecture reasoning, hands-on work, retrieval practice, note-taking, and spaced review with low administrative overhead.
 
 ## Core learning loop
-
-The system uses this cycle:
 
 ```text
 LEARN -> RECALL -> EXPLAIN/DECIDE -> APPLY -> DELAY -> RETRIEVE -> MIX -> RETEST
@@ -26,271 +17,130 @@ LEARN -> RECALL -> EXPLAIN/DECIDE -> APPLY -> DELAY -> RETRIEVE -> MIX -> RETEST
 
 Reading and AI-generated material are input. Retrieval, explanation, scenario decisions, labs, and delayed retest are the primary retention mechanisms.
 
-## Daily cognitive-load rule
+## Workday routine — Sunday through Thursday
 
 A workday after 16:00 must not automatically become a long high-intensity study block.
 
-Weekdays use one primary controlled session plus a short retrieval block. Weekends carry the heavier lab, architecture challenge, and cumulative-review work.
-
-The coordinator adjusts the mode based on current repository state, but must preserve the approved sequence and session-purpose rules.
-
-## Weekday routine
-
-### Before work — optional micro-retrieval
+### Optional pre-work micro-retrieval
 
 Recommended window: **07:15–07:35**, only when sleep/recovery is adequate.
 
-Purpose:
-- retrieve previously learned concepts from memory;
-- review due flashcard/retrieval prompts;
-- no new dense reading;
-- no complex lab work.
+- 10–20 minutes;
+- prior knowledge only;
+- no new dense reading or complex lab;
+- skipping it does not create backlog.
 
-Target: **10–20 minutes**.
+### Primary post-work session
 
-Skipping this block does not create backlog.
-
-### After work decompression
-
-Recommended: do not begin the main study session immediately at 16:00.
-
-Allow a normal transition for food, movement, errands, and mental recovery. The routine does not prescribe a universal exact start time; the coordinator should schedule the primary session when the learner can sustain focused reasoning.
-
-### Primary weekday session
-
-Default duration: **75–105 minutes**.
-
-One session has one primary purpose. Suitable weekday session types:
-
-- `READING`
-- `EXTRACTION_REVIEW`
-- `INSTRUCTION_DISCUSSION`
-- `ARCHITECTURE_DECISION`
-- focused `ASSESSMENT`
-- focused `REMEDIATION`
+Default duration: **75–105 minutes**, after normal decompression from work.
 
 Typical structure:
 
-1. **5–10 min — cold retrieval**
-   - no notes initially;
-   - recall prior mental model, decisions, constraints, or failure modes.
-2. **35–50 min — new/targeted work**
-   - approved human reading, extraction review, architecture discussion, or focused exercise.
-3. **20–30 min — active processing**
-   - explain from memory;
-   - make a decision from requirements;
-   - compare alternatives;
-   - answer a changed-constraint question.
-4. **10–15 min — consolidation**
-   - personal notes only for learner-specific insights/gaps;
-   - record misconceptions;
-   - generate/update controlled flashcards only when required;
-   - session state updated by coordinator.
+1. **5–10 min cold retrieval** — recall prior mental models, decisions, constraints, or failure modes without notes.
+2. **35–50 min targeted work** — approved reading, extraction review, architecture discussion, or focused exercise.
+3. **20–30 min active processing** — explain from memory, choose from requirements, compare alternatives, or handle changed constraints.
+4. **10–15 min consolidation** — learner-specific notes, misconceptions, controlled flashcards where required, coordinator state update.
 
-### Evening retrieval block
+Do not add a second full evening session by default. A separate **10–20 minute** spaced-retrieval block is allowed when useful.
 
-Do **not** add a second full study session by default.
+## Workweek intensity pattern
 
-If useful, perform **10–20 minutes** of spaced retrieval later in the evening. Stop when the due retrieval set is complete. The goal is memory strengthening, not additional content volume.
+Default cognitive-load template:
 
-## Weekday intensity pattern
-
-Default sustainable pattern:
-
-- **Monday — Learn / architecture understanding**
-- **Tuesday — Learn / decision reasoning**
+- **Sunday — Learn / architecture understanding**
+- **Monday — Learn / decision reasoning**
+- **Tuesday — Learn or focused scenario application**
 - **Wednesday — lighter consolidation + retrieval / remediation**
-- **Thursday — Learn / scenario reasoning**
-- **Friday — light cumulative retrieval or rest**
+- **Thursday — scenario reasoning + weekly consolidation; reduce load when fatigue is elevated**
 
-This is a cognitive-load template, not a curriculum reorder. Repository state decides the actual unit/session content.
+This is a cognitive-load template, not a curriculum reorder. Repository state decides actual session content.
 
-Wednesday and Friday deliberately reduce new-content pressure to improve recovery and retention.
+## Weekend routine — Friday and Saturday
 
-## Weekend routine
+### Friday — deep work by default
 
-### One deep-work block
-
-Default duration: **2–3 hours**, with breaks.
+Default: **2–3 hours with breaks**.
 
 Best uses:
-- `LAB`
-- `ARCHITECTURE_DECISION`
-- `CAPSTONE`
-- complex scenario work
-- failure/change injection
-- accumulated remediation
+- `LAB`;
+- `ARCHITECTURE_DECISION`;
+- `CAPSTONE`;
+- complex scenario work;
+- failure/change injection;
+- accumulated remediation.
 
-Do not fill the entire block with reading.
+Do not fill the block with passive reading.
 
-### One cumulative-retrieval block
+### Saturday — cumulative retrieval / recovery by default
 
-Default duration: **45–75 minutes** on the other weekend day or separated from the deep-work block.
+Default cumulative retrieval: **45–75 minutes**.
 
-Use interleaved retrieval across previously covered material:
+Use interleaved retrieval across previously covered material: architecture decisions, comparisons, failure modes, security/reliability/cost implications, short scenarios, architecture reconstruction, and rejected-alternative reasoning.
 
-- architecture decisions;
-- compare/contrast;
-- failure modes;
-- security/reliability/cost implications;
-- short exam-style scenarios;
-- reconstruct a diagram or architecture from memory;
-- explain why rejected alternatives are wrong.
-
-At least one day each week should remain free of substantial new study when fatigue is elevated.
+Saturday may instead become the deep-work day and Friday the retrieval/recovery day when scheduling or fatigue requires it. At least one weekend day should remain free of substantial new study when recovery requires it.
 
 ## Retention schedule
 
-New knowledge is revisited by successful retrieval rather than passive rereading.
+Default retrieval opportunities after first meaningful learning:
 
-Default review opportunities after first meaningful learning:
-
-- **R0:** end of same session — immediate recall;
+- **R0:** end of same session;
 - **R1:** next day or next available study day;
-- **R2:** approximately 3–4 days later;
-- **R3:** approximately 7–10 days later;
-- **R4:** approximately 21–30 days later;
-- **R5:** cumulative review during capstone/readiness phases.
+- **R2:** ~3–4 days;
+- **R3:** ~7–10 days;
+- **R4:** ~21–30 days;
+- **R5:** cumulative capstone/readiness review.
 
-These are target windows, not rigid calendar debts. Missed reviews are rescheduled by priority; they are not all stacked into the next evening.
+These are target windows, not calendar debt. Missed reviews are prioritized by weakness and importance rather than stacked onto the next workday.
 
 ## Retrieval hierarchy
 
-Prefer the most cognitively useful form available:
+Prefer:
 
-1. **Free recall:** explain the concept/decision without prompts.
-2. **Decision retrieval:** requirements -> choose an architecture and justify it.
-3. **Contrast:** distinguish two plausible AWS options.
-4. **Failure retrieval:** predict what breaks and how the design responds.
-5. **Changed constraint:** modify RTO, cost, security, scale, Region, or organizational requirement.
-6. **Implementation retrieval:** recall or reproduce important lab behavior.
-7. **Recognition:** multiple-choice/factual recall only where appropriate.
+1. free recall;
+2. decision retrieval;
+3. compare/contrast;
+4. failure prediction;
+5. changed constraints;
+6. implementation recall;
+7. recognition/multiple choice when appropriate.
 
-Do not let recognition-heavy question practice replace architecture retrieval.
-
-## Interleaving
-
-After a unit reaches basic competence, retrieval should mix related domains rather than repeatedly testing one isolated service.
-
-Examples:
-- storage + reliability + cost;
-- networking + security;
-- deployment + observability + rollback;
-- migration + target architecture + cost.
-
-Interleaving starts after the learner has a usable initial mental model; it should not make first exposure unnecessarily chaotic.
+Recognition-heavy practice must not replace architecture retrieval.
 
 ## Personal note-taking policy
 
-Personal notes are **not** a duplicate of AWS documentation or controlled artifacts.
+Personal notes are not copies of AWS documentation or controlled artifacts. Record learner-specific value only: misconceptions, own-word mental models, missed decision rules, surprising failure modes, why an attractive alternative was wrong, concise sketches, revisit questions, and links to authoritative session/artifact IDs.
 
-Write a note only when it captures something learner-specific or cognitively useful:
-
-- “I kept confusing X with Y.”
-- a mental model in the learner's own words;
-- a decision rule the learner initially missed;
-- a failure mode that was surprising;
-- why an attractive alternative was wrong;
-- a concise architecture sketch/reference;
-- a question to revisit;
-- a link to the authoritative artifact/session.
-
-Do not manually copy:
-- provider feature lists;
-- long summaries already generated by the pipeline;
-- full decision matrices already stored as controlled artifacts;
-- flashcards already controlled by artifact JSON;
-- session administration.
-
-### Personal note format
-
-Use one Markdown file per meaningful topic or misconception, not one giant notebook.
-
-Suggested structure:
-
-```markdown
-# Topic / mental model
-
-Session: SAP-C02-Uxx-Sxxx
-Artifact: <artifact-id if applicable>
-
-## From memory
-<learner's concise explanation>
-
-## Decision rule
-<when/why>
-
-## What I got wrong
-<misconception or weak distinction>
-
-## Revisit
-<question or trigger>
-```
-
-## Note-maintenance rule
-
-If personal note maintenance exceeds roughly **10–15% of total study time**, the coordinator should reduce note-taking and rely more on controlled artifacts/retrieval. Note volume is not a progress metric.
-
-## Retention instrumentation
-
-The coordinator tracks evidence through sessions/mastery state. It should additionally classify retrieval attempts as:
-
-- `RECALLED_CLEANLY`
-- `RECALLED_WITH_PROMPT`
-- `PARTIAL`
-- `INCORRECT`
-- `MISCONCEPTION_REVEALED`
-
-A failed retrieval is useful evidence and schedules remediation; it is not treated as a reason to simply reread everything.
+Use one Markdown note per meaningful topic/misconception. If note maintenance exceeds roughly **10–15%** of study time, reduce it.
 
 ## Fatigue controls
 
-On high-fatigue weekdays:
+On high-fatigue SUN–THU workdays:
 
 - replace new dense reading with retrieval/remediation;
-- shorten the primary session to 45–60 minutes;
+- shorten the main session to 45–60 minutes;
 - avoid H3/H4 labs;
-- preserve sleep rather than extending study late into the night.
+- preserve sleep.
 
-Two consecutive poor-quality sessions trigger a lighter consolidation session before more new material.
+Two consecutive poor-quality sessions trigger a lighter consolidation session before additional new content.
 
 ## Missed-day behavior
 
-Do not create a backlog equal to missed calendar hours.
+Do not create backlog equal to missed hours. On return, coordinator reads repository/session state, runs a short retrieval check, resumes the highest-value pending activity, reschedules due reviews by weakness/importance, then continues the approved sequence.
 
-On return:
-1. coordinator reads repository/session state;
-2. perform a short retrieval check;
-3. resume the highest-value pending activity;
-4. reschedule due reviews based on weakness/importance;
-5. continue the sequence.
+## Weekly coordinator review
 
-## Weekly review
-
-Once per week, ChatGPT coordinator performs a short controlled review of:
-
-- sessions completed;
-- retrieval performance;
-- unresolved misconceptions;
-- due reviews;
-- current E/A/H evidence;
-- fatigue/overload signals;
-- next permitted sessions.
-
-The learner receives a concise summary, not an administrative report dump.
+Once each week, ChatGPT reviews completed sessions, retrieval performance, misconceptions, due reviews, E/A/H evidence, overload signals, and next permitted sessions. The learner receives a concise summary.
 
 ## Study-time target
 
-With an 08:00–16:00 job, the default system aims for approximately:
+Default target around the SUN–THU 08:00–16:00 job:
 
-- **5–8 hours/week of focused primary study**;
-- **1–2 hours/week of retrieval/review**;
-- deeper weekend work as needed.
+- **5–8 hours/week focused primary study**;
+- **1–2 hours/week retrieval/review**;
+- deeper FRI/SAT work as evidence and recovery permit.
 
-This is deliberately below a maximal-hours plan. Quality, retention, and consistency outrank raw clock time.
-
-The coordinator may increase/decrease load based on actual evidence and recovery, but should not exceed sustainable quality merely to meet a weekly-hour target.
+Quality, retention, sleep, and consistency outrank raw clock hours.
 
 ## Relationship to study-start freeze
 
-This routine is approved control design only. It does not authorize creation of a real SAP-C02 study session while `study_start_approval=BLOCKED`.
+This is control design only. It does not authorize a real SAP-C02 study session while `study_start_approval=BLOCKED`.
