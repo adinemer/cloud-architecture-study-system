@@ -43,6 +43,8 @@ jobs:
         run: dnf -y install git python3 python3-pip
       - name: Checkout
         uses: actions/checkout@v4
+      - name: Trust checked-out repository for git metadata
+        run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
       - name: Create environment
         run: |
           python3 -m venv .venv
