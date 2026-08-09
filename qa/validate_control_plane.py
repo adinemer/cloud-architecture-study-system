@@ -16,19 +16,15 @@ REQUIRED_AUTHORITIES = {
 }
 GOVERNANCE_HASH_FILES = REQUIRED_AUTHORITIES - {'aws/sap-c02/objective-map.md','state/project-state.json','state/mastery-state.json'}
 
-def sha256_path(rel):
-    return hashlib.sha256((ROOT/rel).read_bytes()).hexdigest()
-
+def sha256_path(rel): return hashlib.sha256((ROOT/rel).read_bytes()).hexdigest()
 def validate_schema(doc, schema_path):
-    schema = json.loads((ROOT/schema_path).read_text())
-    return [e.message for e in Draft202012Validator(schema, format_checker=FormatChecker()).iter_errors(doc)]
+    schema=json.loads((ROOT/schema_path).read_text())
+    return [e.message for e in Draft202012Validator(schema,format_checker=FormatChecker()).iter_errors(doc)]
 
 def validate_project(project):
     errors=[]
-    if project['study_status'] == 'IN_PROGRESS' and not project['active_session_id']:
-        errors.append('IN_PROGRESS requires active_session_id')
-    if project['study_status'] in {'NOT_STARTED','READY_FOR_DRY_RUN','READY_TO_START','COMPLETED'} and project['active_session_id']:
-        errors.append(f"{project['study_status']} cannot have active_session_id")
+    if project['study_status']=='IN_PROGRESS' and not project['active_session_id']: errors.append('IN_PROGRESS requires active_session_id')
+    if project['study_status'] in {'NOT_STARTED','READY_FOR_DRY_RUN','READY_TO_START','COMPLETED'} and project['active_session_id']: errors.append(f"{project['study_status']} cannot have active_session_id")
     gates=project.get('control_gate_status',{})
     if project['study_status']=='READY_TO_START':
         blockers=[k for k,v in gates.items() if k!='study_start_approval' and v not in {'PASS','NOT_REQUIRED'}]
@@ -39,7 +35,7 @@ def validate_mastery(mastery):
     errors=[]
     if set(mastery['units']) != ALLOWED_UNITS: errors.append('mastery units must exactly cover U00-U15')
     if set(mastery['objectives']) != ALLOWED_OBJECTIVES: errors.append('mastery objectives must exactly cover scored SAP-C02 task IDs')
-    for target, entry in list(mastery['units'].items())+list(mastery['objectives'].items()):
+    for target,entry in list(mastery['units'].items())+list(mastery['objectives'].items()):
         if entry['status']=='COMPLETE':
             if entry['A']!='NOT_APPLICABLE' and isinstance(entry['A'],int) and entry['A']<3: errors.append(f'{target}: COMPLETE with A < 3')
             if target in ALLOWED_OBJECTIVES and isinstance(entry['E'],int) and entry['E']<3: errors.append(f'{target}: COMPLETE with E < 3')
@@ -47,27 +43,23 @@ def validate_mastery(mastery):
     return errors
 
 def validate_snapshot(snap):
-    errors=[]
-    expected=set(GOVERNANCE_HASH_FILES)
-    actual=set(snap.get('governance_hashes',{}))
-    if actual != expected:
-        errors.append(f'control snapshot governance hash set mismatch; missing={sorted(expected-actual)} extra={sorted(actual-expected)}')
+    errors=[]; expected=set(GOVERNANCE_HASH_FILES); actual=set(snap.get('governance_hashes',{}))
+    if actual != expected: errors.append(f'control snapshot governance hash set mismatch; missing={sorted(expected-actual)} extra={sorted(actual-expected)}')
     for rel,digest in snap.get('governance_hashes',{}).items():
         p=ROOT/rel
         if not p.exists(): errors.append(f'control snapshot authority missing from repository: {rel}'); continue
-        if sha256_path(rel) != digest: errors.append(f'control snapshot stale governance hash: {rel}')
+        if sha256_path(rel)!=digest: errors.append(f'control snapshot stale governance hash: {rel}')
     obj='aws/sap-c02/objective-map.md'
-    if sha256_path(obj) != snap.get('objective_map_hash'): errors.append('control snapshot stale objective_map_hash')
+    if sha256_path(obj)!=snap.get('objective_map_hash'): errors.append('control snapshot stale objective_map_hash')
     pipeline=json.loads((ROOT/'state/pipeline-health.json').read_text())
-    if pipeline.get('health') != 'GREEN': errors.append(f"current pipeline health is {pipeline.get('health')}, expected GREEN")
-    if snap.get('pipeline_health_state_version') != pipeline.get('state_version'): errors.append('control snapshot pipeline_health_state_version mismatch')
-    if snap.get('pipeline_health') != pipeline.get('health'): errors.append('control snapshot pipeline_health mismatch')
-    if snap.get('pipeline_fingerprint') != pipeline.get('pipeline_fingerprint'): errors.append('control snapshot pipeline_fingerprint mismatch')
+    if pipeline.get('health')!='GREEN': errors.append(f"current pipeline health is {pipeline.get('health')}, expected GREEN")
+    if snap.get('pipeline_health_state_version')!=pipeline.get('state_version'): errors.append('control snapshot pipeline_health_state_version mismatch')
+    if snap.get('pipeline_health')!=pipeline.get('health'): errors.append('control snapshot pipeline_health mismatch')
+    if snap.get('pipeline_fingerprint')!=pipeline.get('pipeline_fingerprint'): errors.append('control snapshot pipeline_fingerprint mismatch')
     return errors
 
-def validate_session(session, project, mastery, all_sessions):
-    errors=[]
-    units=set(session['unit_ids']); objs=set(session['objective_ids'])
+def validate_session(session,project,mastery,all_sessions):
+    errors=[]; units=set(session['unit_ids']); objs=set(session['objective_ids'])
     if not units <= ALLOWED_UNITS: errors.append(f'unknown units: {sorted(units-ALLOWED_UNITS)}')
     if not objs <= ALLOWED_OBJECTIVES: errors.append(f'unknown objectives: {sorted(objs-ALLOWED_OBJECTIVES)}')
     auth=set(session.get('authorities_consulted',[])); missing=REQUIRED_AUTHORITIES-auth
@@ -75,7 +67,11 @@ def validate_session(session, project, mastery, all_sessions):
     for sid in session.get('prerequisite_sessions',[]):
         if sid not in all_sessions: errors.append(f'unknown prerequisite session: {sid}')
         elif all_sessions[sid].get('status') not in {'COMPLETED','ARCHIVED'}: errors.append(f'prerequisite session not completed: {sid}')
-    status=session['status']
+    pred=session.get('predecessor_session_id'); consumed=session.get('consumed_handoff_id'); status=session['status']
+    if consumed and not pred: errors.append('consumed_handoff_id requires predecessor_session_id')
+    if pred:
+        if pred not in all_sessions: errors.append(f'predecessor session not found: {pred}')
+        if status in {'ACTIVE','PAUSED','REVIEW_PENDING','COMPLETED','ARCHIVED'} and not consumed: errors.append(f'{status} successor requires consumed_handoff_id')
     if status in {'ACTIVE','PAUSED','REVIEW_PENDING','COMPLETED','ARCHIVED'} and not session.get('started_at'): errors.append(f'{status} requires started_at')
     if status in {'COMPLETED','ARCHIVED'}:
         if not session.get('ended_at'): errors.append(f'{status} requires ended_at')
@@ -83,12 +79,14 @@ def validate_session(session, project, mastery, all_sessions):
         if session.get('unresolved_items'): errors.append(f'{status} cannot have unresolved_items')
         if not session.get('next_permitted_action'): errors.append(f'{status} requires next_permitted_action')
         if session.get('required_artifact_types') and not session.get('artifacts'): errors.append('completed session with required artifact types must link artifacts')
+        if not session.get('handoff_id'): errors.append(f'{status} requires mandatory handoff_id')
+    if status in {'ABORTED','SUPERSEDED'} and not session.get('handoff_id'): errors.append(f'{status} requires mandatory handoff_id')
     if status=='PAUSED' and not session.get('pause_state'): errors.append('PAUSED requires pause_state')
     if status=='BLOCKED' and session.get('completion_qa')=='PASS': errors.append('BLOCKED cannot have completion_qa=PASS')
     if status=='ACTIVE' and project.get('active_session_id') not in {None,session['session_id']}: errors.append('ACTIVE session conflicts with project active_session_id')
     snap=session['control_snapshot']
-    if snap['project_state_version'] != project['state_version']: errors.append('control snapshot project_state_version mismatch')
-    if snap['mastery_state_version'] != mastery['state_version']: errors.append('control snapshot mastery_state_version mismatch')
+    if snap['project_state_version']!=project['state_version']: errors.append('control snapshot project_state_version mismatch')
+    if snap['mastery_state_version']!=mastery['state_version']: errors.append('control snapshot mastery_state_version mismatch')
     errors += validate_snapshot(snap)
     return errors
 
