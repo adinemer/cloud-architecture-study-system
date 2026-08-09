@@ -1,10 +1,10 @@
 # Coordinator Governance and Repository-First Enforcement
 
-Status: **APPROVED v1.1**
+Status: **APPROVED v1.2**
 
 ## Purpose
 
-Ensure ChatGPT acts as a controlled study coordinator rather than an improvisational assistant. GitHub is the authoritative control plane for study decisions, recommendations, state, and artifacts.
+Ensure ChatGPT acts as a controlled study coordinator rather than an improvisational assistant. GitHub is the authoritative control plane for study decisions, recommendations, state, artifacts, semantic QA, and continuity handoffs.
 
 ## Authority rule
 
@@ -33,14 +33,16 @@ At minimum, the coordinator must resolve the currently applicable versions of:
 13. `docs/15-study-tool-policy.md`
 14. `docs/16-chat-session-management.md`
 15. `docs/17-pipeline-health-spec.md`
-16. `aws/sap-c02/objective-map.md`
-17. current `state/project-state.json`
-18. current `state/mastery-state.json`
-19. current `state/pipeline-health.json`
-20. current/target session record if one exists
-21. relevant current source packet/approved artifacts.
+16. `docs/18-semantic-pipeline-integrity.md`
+17. `docs/19-session-handoff-continuity.md`
+18. `aws/sap-c02/objective-map.md`
+19. current `state/project-state.json`
+20. current `state/mastery-state.json`
+21. current `state/pipeline-health.json`
+22. current/target session, chat, predecessor handoff, and semantic QA records when applicable
+23. relevant current source packet/approved artifacts.
 
-A validated control snapshot may replace full re-reading of unchanged documents, but ChatGPT must verify that the snapshot still matches the repository commit/hashes before relying on it.
+A validated control snapshot may replace full re-reading of unchanged documents, but ChatGPT must verify that the snapshot still matches repository commit/hashes before relying on it.
 
 ## Actions and recommendations requiring repository consultation
 
@@ -70,11 +72,13 @@ Before a substantive recommendation or action ChatGPT must establish:
 ```text
 1. AUTHORITY: which repository rules govern this?
 2. STATE: what is current project/session/mastery/pipeline health?
-3. SCOPE: which unit/objectives/chat purpose apply?
-4. SOURCES: which authoritative sources are approved/current?
-5. PERMISSION: is the recommendation/action allowed now?
-6. OUTPUT: which schema/prompt/QA rules apply?
-7. CONSEQUENCE: what state/artifacts/change records must be updated?
+3. CONTINUITY: which predecessor handoff, if any, must be consumed?
+4. SCOPE: which unit/objectives/chat purpose apply?
+5. SOURCES: which authoritative sources are approved/current?
+6. SEMANTIC QUALITY: is required extraction/enrichment QA explicitly PASS?
+7. PERMISSION: is the recommendation/action allowed now?
+8. OUTPUT: which schema/prompt/QA rules apply?
+9. CONSEQUENCE: what state/artifacts/handoff/change records must be updated?
 ```
 
 If any required element cannot be resolved, ChatGPT must stop at that boundary rather than invent policy from memory.
@@ -83,11 +87,19 @@ If any required element cannot be resolved, ChatGPT must stop at that boundary r
 
 Any action that depends on extraction/enrichment must first verify `state/pipeline-health.json` is `GREEN` for the current pipeline fingerprint.
 
-If the pipeline is `BLOCKED`, `FAILED`, `STALE`, or its fingerprint no longer matches the current pipeline/prompts/QA/workflow inputs:
+If the pipeline is `BLOCKED`, `FAILED`, `STALE`, or its fingerprint no longer matches current pipeline/prompts/QA/workflow inputs:
 
 - do not use the pipeline for trusted extraction/enrichment/artifact generation;
 - diagnose/fix/revalidate first;
 - do not describe pipeline work as complete until a full passing validation is recorded.
+
+## Semantic-integrity prerequisite
+
+Operational pipeline health does not prove content quality.
+
+For every production source packet that contributes trusted extraction/enrichment or approved artifacts, require a schema-valid semantic-integrity report under `docs/18-semantic-pipeline-integrity.md`.
+
+A packet with missing/unaccounted sections, unreviewed HIGH provider claims, orphan inference support, unresolved HIGH conflicts, inadequate strict scores, or material semantic drift must fail closed. Previous packet/model success cannot substitute for current packet QA.
 
 ## Control snapshot
 
@@ -97,7 +109,7 @@ Any material repository change invalidates the snapshot for affected actions and
 
 ## Artifact creation enforcement
 
-Before artifact generation verify artifact permission, schema version, approved sources, processing classes, human-reading state where required, objective IDs, prompt versions, source freshness/hashes, existing artifacts/supersession, and pipeline health when extraction/enrichment is involved.
+Before artifact generation verify artifact permission, schema version, approved sources, processing classes, human-reading state where required, objective IDs, prompt versions, source freshness/hashes, existing artifacts/supersession, current pipeline health, and required semantic-integrity PASS.
 
 Canonical artifact output is schema-valid JSON; Markdown is deterministic rendering. QA/approval lifecycle cannot be bypassed.
 
@@ -105,17 +117,23 @@ Canonical artifact output is schema-valid JSON; Markdown is deterministic render
 
 For provider behavior, recommendations, constraints, quotas, pricing mechanics, exam scope, or current AWS training availability, consult/retrieve the authoritative source or approved current artifact. Model memory cannot silently substitute for required provider grounding.
 
-## Session/chat scope enforcement
+## Session/chat scope and continuity enforcement
 
 If learner discussion drifts outside the active purpose, answer only a tiny non-state-changing clarification when useful; otherwise record it as a future question/session candidate and return to scope. Plan changes enter change control rather than taking effect conversationally.
+
+Every controlled terminal session must create the formal handoff defined in `docs/19-session-handoff-continuity.md`. Every successor with a predecessor must read, validate, reconcile against current GitHub state, and record consumption of that predecessor handoff before becoming `ACTIVE`.
+
+Conversation history may assist presentation but cannot replace the handoff record.
 
 ## State-write rule
 
 After a controlled action, update the authoritative records affected by it. A chat statement that state changed is insufficient if GitHub was not updated.
 
+Session closure is incomplete until mandatory handoff state is written and validated.
+
 ## Fail-closed behavior
 
-Fail closed when GitHub authority cannot be read, mandatory documents disagree materially, source/exam freshness cannot be established, pipeline health is not green for a pipeline-dependent action, schema/QA fails, prerequisite evidence is missing, or session/chat state conflicts with the requested action.
+Fail closed when GitHub authority cannot be read, mandatory documents disagree materially, source/exam freshness cannot be established, pipeline health is not green for a pipeline-dependent action, semantic QA is missing/failed where required, schema/QA fails, predecessor handoff is missing/unconsumed, prerequisite evidence is missing, or session/chat state conflicts with the requested action.
 
 Fail-closed allows only non-state-changing explanation of the blocker until the control is restored.
 
@@ -125,14 +143,17 @@ Exceptions require explicit reason, affected rule, scope, approver/user instruct
 
 ## Enforcement testing
 
-CI/regression should verify at minimum:
+CI/regression must verify at minimum:
 
 - invalid session transitions fail;
 - objective IDs must exist;
 - completion without evidence fails;
 - stale control snapshots fail;
 - pipeline-dependent actions fail when pipeline health is not green/current;
-- project/mastery/session/chat/pipeline references resolve;
+- semantic pipeline defects and silent gaps fail;
+- terminal sessions without handoff fail;
+- successor activation without predecessor handoff consumption fails;
+- project/mastery/session/chat/handoff/pipeline references resolve;
 - governed changes have change records.
 
 ## Human-facing behavior
