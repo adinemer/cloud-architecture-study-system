@@ -10,18 +10,27 @@ on:
       - 'docs/14-study-operating-routine.md'
       - 'docs/15-study-tool-policy.md'
       - 'docs/16-chat-session-management.md'
+      - 'docs/17-pipeline-health-spec.md'
       - 'schemas/session-v1.schema.json'
       - 'schemas/chat-session-v1.schema.json'
       - 'schemas/state-v1.schema.json'
       - 'schemas/change-v1.schema.json'
+      - 'schemas/pipeline-health-v1.schema.json'
       - 'state/**'
       - 'sessions/**'
       - 'changes/**'
+      - 'pipeline/**'
+      - 'prompts/extract-v1.md'
+      - 'prompts/enrich-v1.md'
+      - 'prompts/qa-v1.md'
       - 'qa/validate_control_plane.py'
       - 'qa/validate_chat_sessions.py'
+      - 'qa/validate_pipeline_health.py'
+      - 'qa/pipeline_fingerprint.py'
       - 'qa/control_regression.py'
       - 'qa/control_snapshot.py'
       - 'qa/end_to_end_dry_run.py'
+      - '.github/workflows/pipeline-smoke.yml'
       - '.github/workflows/control-plane.yml'
   pull_request:
     paths:
@@ -32,18 +41,27 @@ on:
       - 'docs/14-study-operating-routine.md'
       - 'docs/15-study-tool-policy.md'
       - 'docs/16-chat-session-management.md'
+      - 'docs/17-pipeline-health-spec.md'
       - 'schemas/session-v1.schema.json'
       - 'schemas/chat-session-v1.schema.json'
       - 'schemas/state-v1.schema.json'
       - 'schemas/change-v1.schema.json'
+      - 'schemas/pipeline-health-v1.schema.json'
       - 'state/**'
       - 'sessions/**'
       - 'changes/**'
+      - 'pipeline/**'
+      - 'prompts/extract-v1.md'
+      - 'prompts/enrich-v1.md'
+      - 'prompts/qa-v1.md'
       - 'qa/validate_control_plane.py'
       - 'qa/validate_chat_sessions.py'
+      - 'qa/validate_pipeline_health.py'
+      - 'qa/pipeline_fingerprint.py'
       - 'qa/control_regression.py'
       - 'qa/control_snapshot.py'
       - 'qa/end_to_end_dry_run.py'
+      - '.github/workflows/pipeline-smoke.yml'
       - '.github/workflows/control-plane.yml'
   workflow_dispatch:
 
@@ -63,6 +81,10 @@ jobs:
           . .venv/bin/activate
           python -m pip install --upgrade pip
           python -m pip install 'jsonschema[format]'
+      - name: Validate current extraction pipeline health
+        run: |
+          . .venv/bin/activate
+          PYTHONPATH=qa python qa/validate_pipeline_health.py
       - name: Validate authoritative state and sessions
         run: |
           . .venv/bin/activate
