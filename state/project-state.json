@@ -1,7 +1,7 @@
 {
   "state_type": "PROJECT_STATE",
   "schema_version": "1.0.0",
-  "state_version": "1.0.4",
+  "state_version": "1.0.5",
   "certification": "SAP-C02",
   "exam_scope_version": "2026-08-09",
   "study_status": "READY_TO_START",
@@ -13,6 +13,7 @@
     "resource_inventory": "PASS",
     "study_sequence": "PASS",
     "extraction_pipeline": "PASS",
+    "pipeline_health": "PASS",
     "artifact_qa": "PASS",
     "progress_mastery": "PASS",
     "session_management": "PASS",
@@ -25,5 +26,5 @@
     "end_to_end_dry_run": "PASS",
     "study_start_approval": "BLOCKED"
   },
-  "updated_at": "2026-08-09T10:39:00Z"
+  "updated_at": "2026-08-09T12:04:00Z"
 }
