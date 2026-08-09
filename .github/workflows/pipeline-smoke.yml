@@ -121,6 +121,9 @@ jobs:
           assert Path('work/waf-bundle-1.md').read_bytes() == Path('work/waf-bundle-2.md').read_bytes()
           PY
 
+      - name: Print validated pipeline fingerprint
+        run: python qa/pipeline_fingerprint.py
+
       - name: Upload normalized smoke outputs
         uses: actions/upload-artifact@v4
         with:
