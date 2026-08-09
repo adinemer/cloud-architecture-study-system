@@ -1,0 +1,125 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/adinemer/cloud-architecture-study-system/schemas/artifact-v1.schema.json",
+  "title": "Cloud Architecture Study Artifact v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["meta", "sources", "claims", "content"],
+  "properties": {
+    "meta": {"$ref": "#/$defs/meta"},
+    "sources": {"type": "array", "items": {"$ref": "#/$defs/source"}, "minItems": 1},
+    "claims": {"type": "array", "items": {"$ref": "#/$defs/claim"}},
+    "content": {"type": "object"}
+  },
+  "$defs": {
+    "nonEmptyString": {"type": "string", "minLength": 1},
+    "stringArray": {"type": "array", "items": {"$ref": "#/$defs/nonEmptyString"}, "uniqueItems": true},
+    "meta": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["artifact_id", "artifact_type", "schema_version", "artifact_version", "status", "provider", "certification", "exam_scope_version", "unit_ids", "objective_ids", "architecture_domains", "processing_classes", "source_ids", "prompt_versions", "model_id", "generated_at", "qa_state"],
+      "properties": {
+        "artifact_id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9-]+$"},
+        "artifact_type": {"enum": ["source_summary", "architecture_note", "decision_record", "comparison_matrix", "pattern_note", "flashcard_set", "lab_brief", "assessment_set", "misconception_record"]},
+        "schema_version": {"const": "1.0.0"},
+        "artifact_version": {"type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"},
+        "status": {"enum": ["DRAFT", "QA_PENDING", "REVIEW_REQUIRED", "APPROVED", "SUPERSEDED"]},
+        "provider": {"const": "AWS"},
+        "certification": {"const": "SAP-C02"},
+        "exam_scope_version": {"$ref": "#/$defs/nonEmptyString"},
+        "unit_ids": {"$ref": "#/$defs/stringArray"},
+        "objective_ids": {"$ref": "#/$defs/stringArray"},
+        "architecture_domains": {"$ref": "#/$defs/stringArray"},
+        "processing_classes": {"type": "array", "items": {"enum": ["READ_FULL_CONTEXTUALIZE", "READ_SELECTIVE_EXTRACT", "EXTRACT_VALIDATE", "REFERENCE_ONLY", "HANDS_ON", "ASSESSMENT"]}, "minItems": 1, "uniqueItems": true},
+        "source_ids": {"$ref": "#/$defs/stringArray"},
+        "prompt_versions": {"$ref": "#/$defs/stringArray"},
+        "model_id": {"$ref": "#/$defs/nonEmptyString"},
+        "generated_at": {"type": "string", "format": "date-time"},
+        "last_reviewed_at": {"type": ["string", "null"], "format": "date-time"},
+        "qa_state": {"enum": ["QA_PENDING", "PASS", "FAIL", "NEEDS_REVIEW"]},
+        "exception_reason": {"type": "string", "minLength": 1}
+      }
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source_id", "title", "canonical_url", "retrieved_url", "provider", "retrieved_at", "source_sha256", "normalized_sha256", "source_type", "processing_class", "human_reading_scope"],
+      "properties": {
+        "source_id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9-]+$"},
+        "title": {"$ref": "#/$defs/nonEmptyString"},
+        "canonical_url": {"type": "string", "format": "uri"},
+        "retrieved_url": {"type": "string", "format": "uri"},
+        "provider": {"const": "AWS"},
+        "retrieved_at": {"type": "string", "format": "date-time"},
+        "source_sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+        "normalized_sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+        "source_type": {"$ref": "#/$defs/nonEmptyString"},
+        "processing_class": {"enum": ["READ_FULL_CONTEXTUALIZE", "READ_SELECTIVE_EXTRACT", "EXTRACT_VALIDATE", "REFERENCE_ONLY", "HANDS_ON", "ASSESSMENT"]},
+        "human_reading_scope": {"type": ["string", "null"]},
+        "visible_revision": {"type": ["string", "null"]}
+      }
+    },
+    "sourceRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source_id", "locator"],
+      "properties": {
+        "source_id": {"$ref": "#/$defs/nonEmptyString"},
+        "locator": {"$ref": "#/$defs/nonEmptyString"}
+      }
+    },
+    "claim": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["claim_id", "label", "text", "source_refs", "confidence", "severity"],
+      "properties": {
+        "claim_id": {"type": "string", "pattern": "^c[0-9]{3,}$"},
+        "label": {"enum": ["PROVIDER_FACT", "PROVIDER_RECOMMENDATION", "CROSS_SOURCE_SYNTHESIS", "ARCHITECTURAL_INFERENCE", "EXAM_INTERPRETATION"]},
+        "text": {"$ref": "#/$defs/nonEmptyString"},
+        "source_refs": {"type": "array", "items": {"$ref": "#/$defs/sourceRef"}},
+        "confidence": {"enum": ["HIGH", "MEDIUM", "LOW"]},
+        "severity": {"enum": ["HIGH", "MEDIUM", "LOW"]},
+        "inference_rationale": {"type": "string", "minLength": 1},
+        "objective_ids": {"$ref": "#/$defs/stringArray"}
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"meta": {"properties": {"artifact_type": {"const": "source_summary"}}}}},
+      "then": {"properties": {"content": {"type": "object", "required": ["purpose", "key_claims", "constraints_and_caveats", "unresolved_questions", "human_reading_completed", "human_reading_scope"], "properties": {"purpose": {"type": "string"}, "key_claims": {"$ref": "#/$defs/stringArray"}, "constraints_and_caveats": {"type": "array", "items": {"type": "string"}}, "unresolved_questions": {"type": "array", "items": {"type": "string"}}, "human_reading_completed": {"enum": [true, false, "not_required"]}, "human_reading_scope": {"type": ["string", "null"]}}, "additionalProperties": false}}}
+    },
+    {
+      "if": {"properties": {"meta": {"properties": {"artifact_type": {"const": "architecture_note"}}}}},
+      "then": {"properties": {"content": {"type": "object", "required": ["problem_statement", "requirements_and_drivers", "provider_grounding", "design_implications", "tradeoffs", "failure_modes", "security_implications", "reliability_implications", "performance_implications", "cost_implications", "operational_implications", "decision_change_triggers", "open_questions"], "additionalProperties": true}}}
+    },
+    {
+      "if": {"properties": {"meta": {"properties": {"artifact_type": {"const": "decision_record"}}}}},
+      "then": {"properties": {"content": {"type": "object", "required": ["decision_title", "context", "requirements", "constraints", "options", "decision", "rationale", "consequences_positive", "consequences_negative", "risks", "when_to_revisit", "exam_relevance"], "additionalProperties": true}}}
+    },
+    {
+      "if": {"properties": {"meta": {"properties": {"artifact_type": {"const": "comparison_matrix"}}}}},
+      "then": {"properties": {"content": {"type": "object", "required": ["decision_question", "options", "criteria", "cells", "selection_rules", "dangerous_simplifications"], "additionalProperties": true}}}
+    },
+    {
+      "if": {"properties": {"meta": {"properties": {"artifact_type": {"const": "pattern_note"}}}}},
+      "then": {"properties": {"content": {"type": "object", "required": ["pattern_kind", "problem", "context", "forces", "structure", "when_to_use", "when_not_to_use", "failure_behavior", "tradeoffs", "related_decisions"], "properties": {"pattern_kind": {"enum": ["PATTERN", "ANTI_PATTERN"]}}, "additionalProperties": true}}}
+    },
+    {
+      "if": {"properties": {"meta": {"properties": {"artifact_type": {"const": "flashcard_set"}}}}},
+      "then": {"properties": {"content": {"type": "object", "required": ["cards"], "properties": {"cards": {"type": "array", "items": {"type": "object", "required": ["card_id", "card_type", "front", "back", "why_it_matters", "source_refs", "objective_ids", "volatility"], "properties": {"card_id": {"type": "string"}, "card_type": {"enum": ["CONCEPT", "DECISION", "CONSTRAINT", "COMPARE", "FAILURE_MODE"]}, "front": {"type": "string"}, "back": {"type": "string"}, "why_it_matters": {"type": "string"}, "source_refs": {"type": "array", "items": {"$ref": "#/$defs/sourceRef"}, "minItems": 1}, "objective_ids": {"$ref": "#/$defs/stringArray"}, "volatility": {"enum": ["LOW", "MEDIUM", "HIGH"]}}, "additionalProperties": false}}}, "additionalProperties": false}}}
+    },
+    {
+      "if": {"properties": {"meta": {"properties": {"artifact_type": {"const": "lab_brief"}}}}},
+      "then": {"properties": {"content": {"type": "object", "required": ["lab_level", "learning_objectives", "scenario", "requirements", "constraints", "allowed_sources", "acceptance_criteria", "evidence_to_capture", "failure_or_change_injection", "cleanup_requirements", "estimated_cost_risk"], "properties": {"lab_level": {"enum": ["H0", "H1", "H2", "H3", "H4"]}, "estimated_cost_risk": {"enum": ["NONE", "LOW", "MEDIUM", "HIGH"]}}, "additionalProperties": true}}}
+    },
+    {
+      "if": {"properties": {"meta": {"properties": {"artifact_type": {"const": "assessment_set"}}}}},
+      "then": {"properties": {"content": {"type": "object", "required": ["assessment_label", "questions"], "properties": {"assessment_label": {"const": "GENERATED_ASSESSMENT"}, "questions": {"type": "array", "minItems": 1}}, "additionalProperties": true}}}
+    },
+    {
+      "if": {"properties": {"meta": {"properties": {"artifact_type": {"const": "misconception_record"}}}}},
+      "then": {"properties": {"content": {"type": "object", "required": ["misconception", "evidence", "correct_model", "root_cause", "source_refs", "remediation_actions", "retest_criteria"], "properties": {"root_cause": {"enum": ["FACT_GAP", "DECISION_GAP", "REQUIREMENT_MISS", "IMPLEMENTATION_GAP", "TIME_PRESSURE", "OTHER"]}}, "additionalProperties": true}}}
+    }
+  ]
+}
