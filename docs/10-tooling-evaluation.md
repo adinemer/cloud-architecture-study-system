@@ -1,160 +1,84 @@
 # Tooling Evaluation
 
-Status: **PARTIAL APPROVAL — extraction toolchain approved; other study-tool areas remain open**
+Status: **APPROVED v1.1 — extraction and study-tool decisions resolved for pre-study**
 
 ## Selection principles
 
-Prefer tools that are:
+Prefer tools that are simple, inspectable, low-maintenance, portable, and measurably useful. Study-tool eligibility is governed by `docs/15-study-tool-policy.md`: an official Fedora package, official Flatpak, or official Docker/OCI image is required; FOSS is preferred, while a free tier is acceptable when it contains all required features.
 
-1. open source;
-2. Fedora/Linux friendly;
-3. simple to install and remove;
-4. inspectable and scriptable;
-5. able to export portable formats such as Markdown/JSON;
-6. low-maintenance;
-7. measurably useful for quality or study-time reduction.
+## Approved extraction toolchain
 
-A proprietary/cloud tool may be recommended when it provides a material advantage that would otherwise require disproportionate engineering effort.
+The validated AWS v1 stack is:
 
-## Approved minimum extraction toolchain
+- provider-native AWS Markdown when available;
+- Python 3 deterministic acquisition/provenance/bundle scripts;
+- Trafilatura for HTML extraction fallback;
+- Markdown + JSON for normalized content/provenance;
+- Git/GitHub for controls, code, prompts, QA, state, and artifacts;
+- ChatGPT for controlled extraction, enrichment, instruction, coordination, and QA under versioned prompts.
 
-Issue #3 validated the following AWS-specific stack in a clean Fedora container:
+Approved fallback/optional extraction tools:
 
-- **provider-native AWS Markdown** — primary ingestion format for canonical `docs.aws.amazon.com` content when the companion Markdown page exists;
-- **Python 3** — deterministic acquisition/provenance/bundle scripts;
-- **Trafilatura** — preferred HTML-to-Markdown extraction when native Markdown is unavailable;
-- **Markdown + JSON** — inspectable normalized content and provenance;
-- **Git/GitHub** — specifications, scripts, prompts, QA evidence, approved artifacts, and change history;
-- **ChatGPT** — controlled grounded extraction, architectural enrichment, instruction, coordination, and QA under versioned prompts.
+- Pandoc — HTML fallback;
+- `pdftotext -layout` — simple PDF fallback;
+- PyMuPDF4LLM — optional high-fidelity PDF path where structure matters.
 
-This is the default v1 path. No additional retrieval platform is required.
+Not selected for AWS v1 because no measured need exists:
 
-## Approved fallbacks / optional extraction tools
+- MarkItDown;
+- vector database/custom RAG;
+- knowledge graph;
+- multi-agent/autonomous framework;
+- custom study web application.
 
-### Pandoc — approved HTML fallback
+## Approved learner-facing study tools
 
-Strengths:
-- Fedora package;
-- deterministic;
-- strong structural conversion for headings/lists/tables.
+The operational study-tool policy is `docs/15-study-tool-policy.md`.
 
-Pilot limitation:
-- generic conversion retained navigation/footer boilerplate in the synthetic HTML test.
+Current core:
 
-Decision: keep as fallback when Trafilatura is unavailable or when deterministic full-document conversion is useful.
+- Ghostwriter — personal Markdown notes;
+- Git — repository interaction/version control;
+- ripgrep — local search/retrieval.
 
-### `pdftotext -layout` — approved low-dependency PDF fallback
+Optional:
 
-Strengths:
-- available through Fedora `poppler-utils`;
-- simple and fast;
-- adequate for plain text PDFs.
+- Neovim;
+- Kate.
 
-Pilot limitation:
-- semantic heading/list structure was weaker than Markdown/high-fidelity extraction.
+A dedicated SRS application is not required for v1. Controlled flashcard artifacts plus ChatGPT/session/mastery state provide the retention workflow without introducing a second authoritative database.
 
-Decision: use only for simple PDF sources; escalate architecture-significant layouts.
+## Knowledge-management decision
 
-### PyMuPDF4LLM — approved optional high-fidelity PDF path
+Plain Markdown + Git remains sufficient. Personal learner notes are local-only by default and remain non-authoritative. Backlinks, graph databases, or dedicated knowledge-management applications are not justified without a measured navigation/retrieval problem.
 
-Fedora CI successfully installed and executed the tested current version.
+## Diagram decision
 
-Strengths:
-- stronger structure/layout-oriented Markdown conversion;
-- useful for PDF-only sources where headings/tables/layout matter.
+No mandatory diagram application is required before study start. Architecture diagrams may be created with an eligible versionable tool when a session/lab needs one; diagram tooling is therefore an on-demand convenience, not a pre-study gate.
 
-Cost:
-- materially larger dependency footprint; the tested installation pulled PyMuPDF Layout, ONNX Runtime, NumPy, and related dependencies.
+## Lab tooling decision
 
-Decision: **do not install as a permanent minimum dependency** for AWS study. Install/use when a PDF-only source actually needs it.
+Official AWS labs/workshops remain the primary hands-on sources. Local CLI/IaC tooling is introduced only when a controlled lab benefits from repeatability, teardown, failure injection, or architecture evidence. No additional lab platform is a pre-study prerequisite.
 
-## Evaluated but not selected for AWS v1
+## Local AI decision
 
-### MarkItDown
+Local LLM tooling is not part of the trusted production extraction path. It may later handle low-risk/repetitive work only after passing the same source-fidelity and regression controls required for any model/toolchain change.
 
-Potential value:
-- useful general-purpose conversion across PDF/Office/other document formats.
-
-Why not selected:
-- the AWS canonical source path already provides native HTML/Markdown for the material we need;
-- Trafilatura + optional PDF tooling covers the remaining current ingestion cases;
-- another general converter would add a tool without solving a demonstrated AWS pipeline problem.
-
-Reconsider for Azure/Microsoft material or mixed Office-document workflows if the source inventory demonstrates a need.
-
-### Vector database / custom RAG
-
-Not selected. The curriculum deliberately uses small, objective-driven source packets, and Issue #3 did not reveal a retrieval problem that justifies embeddings/vector infrastructure.
-
-### Knowledge graph
-
-Not selected. Architecture relationships can initially be represented through approved Markdown artifacts/objective mappings. Add only if navigation/relationship management becomes a measured bottleneck.
-
-### Multi-agent / autonomous agent framework
-
-Not selected. It would increase orchestration/debugging surface without improving the validated extraction quality.
-
-### Custom study web application
-
-Not selected. GitHub + Markdown + ChatGPT currently cover governance and content workflow. Build software only for a demonstrated study-process bottleneck.
-
-## Extraction validation evidence
+## Validation evidence
 
 See:
-- [`../qa/pilot-plan.md`](../qa/pilot-plan.md)
-- [`../qa/pilot-gold-v1.md`](../qa/pilot-gold-v1.md)
-- [`../qa/pilot-results.md`](../qa/pilot-results.md)
-- [`../pipeline/README.md`](../pipeline/README.md)
-- [`.github/workflows/pipeline-smoke.yml`](../.github/workflows/pipeline-smoke.yml)
 
-Key pilot outcomes:
-- live AWS native-Markdown ingestion passed in Fedora;
-- Trafilatura HTML fallback passed;
-- PyMuPDF4LLM PDF smoke test passed;
-- source provenance and deterministic prompt bundles passed;
-- source-fidelity/qualifier/inference controls passed the representative LLM benchmark.
+- `qa/pilot-plan.md`
+- `qa/pilot-gold-v1.md`
+- `qa/pilot-results.md`
+- `pipeline/README.md`
+- `.github/workflows/pipeline-smoke.yml`
+- `.github/workflows/artifact-qa.yml`
+- `.github/workflows/control-plane.yml`
+- `state/pipeline-health.json`
 
-## Functional areas still to evaluate
-
-### Schema and QA enforcement — next gate
-Evaluate:
-- JSON Schema / Pydantic-style validation;
-- Markdown/front-matter validation;
-- citation/provenance checks;
-- repeatability/regression tests for extraction/artifact prompts.
-
-### Knowledge management
-Plain Markdown + Git remains the default until production study demonstrates a navigation/search problem. If a dedicated app is considered, it must support Linux and portable files.
-
-### Flashcards
-Evaluate open-source spaced-repetition tooling and simple import/export formats. Flashcard generation must remain controlled by artifact policy to avoid trivia overload.
-
-### Diagrams
-Evaluate text-based or open-source diagram tools that keep architecture diagrams versionable in Git.
-
-### Labs
-Official AWS lab/workshop options are already inventoried. Local Terraform/CLI tooling should be added only where it improves architecture learning, repeatability, teardown, or failure testing.
-
-### Local AI
-Existing local LLM tooling may be considered for low-risk repetitive transforms/offline processing, but it must pass the same source-fidelity regression set before any approved pipeline stage is delegated.
-
-## Evaluation scorecard
-
-Each future candidate tool should be scored on:
-
-- study-time saved;
-- output quality;
-- source fidelity;
-- Linux/Fedora support;
-- setup effort;
-- maintenance effort;
-- interoperability;
-- reproducibility;
-- automation potential;
-- lock-in;
-- privacy/security implications;
-- cost.
+Current pipeline use is allowed only while pipeline health is `GREEN` for the current fingerprint.
 
 ## Upgrade rule
 
-Add a new tool only when a documented pipeline/study bottleneck or quality defect cannot be solved acceptably with the current simpler stack.
+Add a tool only when a documented study/pipeline bottleneck or quality defect cannot be solved acceptably with the current simpler stack. Tool adoption must not create duplicate authoritative state.
