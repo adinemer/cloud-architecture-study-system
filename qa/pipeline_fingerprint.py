@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# Temporary PR trigger comment; fingerprint inputs intentionally exclude this file.
 import hashlib
 from pathlib import Path
 
