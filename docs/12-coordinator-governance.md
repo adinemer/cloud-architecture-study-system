@@ -1,20 +1,22 @@
 # Coordinator Governance and Repository-First Enforcement
 
-Status: **APPROVED v1**
+Status: **APPROVED v1.1**
 
 ## Purpose
 
-Ensure ChatGPT acts as a controlled study coordinator rather than an improvisational assistant. GitHub is the authoritative control plane for study decisions, state, and artifacts.
+Ensure ChatGPT acts as a controlled study coordinator rather than an improvisational assistant. GitHub is the authoritative control plane for study decisions, recommendations, state, and artifacts.
 
 ## Authority rule
 
 Conversation context and model memory are non-authoritative conveniences.
 
-Before making any controlled study decision or creating/updating any study artifact, ChatGPT must consult the current authoritative repository state.
+Before making any **substantive recommendation, controlled decision, state-changing action, or study-artifact change related to this study system**, ChatGPT must consult the current authoritative repository state.
 
-## Mandatory read-before-decide set
+This rule includes recommendations, not only execution.
 
-At minimum, the coordinator must consult the currently applicable versions of:
+## Mandatory read-before-recommend / read-before-decide set
+
+At minimum, the coordinator must resolve the currently applicable versions of:
 
 1. `docs/00-system-charter.md`
 2. `docs/02-chatgpt-operating-spec.md`
@@ -27,157 +29,112 @@ At minimum, the coordinator must consult the currently applicable versions of:
 9. `docs/11-study-session-management.md`
 10. this specification
 11. `docs/13-change-control-freshness.md`
-12. `aws/sap-c02/objective-map.md`
-13. current `state/project-state.json`
-14. current `state/mastery-state.json`
-15. current/target session record if one exists
-16. current source packet/approved artifacts relevant to the action.
+12. `docs/14-study-operating-routine.md`
+13. `docs/15-study-tool-policy.md`
+14. `docs/16-chat-session-management.md`
+15. `docs/17-pipeline-health-spec.md`
+16. `aws/sap-c02/objective-map.md`
+17. current `state/project-state.json`
+18. current `state/mastery-state.json`
+19. current `state/pipeline-health.json`
+20. current/target session record if one exists
+21. relevant current source packet/approved artifacts.
 
-The coordinator may use a validated control snapshot rather than re-reading unchanged full files every turn, but it must verify that the snapshot still matches current repository commit/hashes before relying on it.
+A validated control snapshot may replace full re-reading of unchanged documents, but ChatGPT must verify that the snapshot still matches the repository commit/hashes before relying on it.
 
-## Controlled decisions that require repository consultation
+## Actions and recommendations requiring repository consultation
 
 This includes, but is not limited to:
 
-- choosing the next study session or unit;
-- changing study order;
-- skipping or adding required reading;
-- changing a source's processing class;
-- deciding whether a course/lab is required;
+- choosing or recommending the next study session/unit/topic;
+- recommending changes to study order, routine, retention spacing, note-taking, or workload;
+- recommending a software/tool change for the study system;
+- recommending, adding, skipping, or changing required reading/course/lab/assessment;
+- recommending or changing a source processing class;
+- recommending or creating pipeline/parser/prompt/model/schema/control changes;
 - creating, updating, approving, or superseding an artifact;
-- generating flashcards, assessment questions, lab briefs, ADRs, summaries, or architecture notes;
+- generating flashcards, assessments, lab briefs, ADRs, summaries, or architecture notes;
 - changing mastery/progress state;
-- declaring a session/unit/objective complete;
+- declaring session/unit/objective completion;
 - choosing remediation;
 - changing source packets;
-- deciding that old material remains current;
-- responding to a study request that would move outside the active session scope.
+- deciding old material is still current;
+- recommending action outside the active chat/session purpose.
+
+Tiny explanatory tangents that do not alter/recommend study-system behavior may be answered without a new state write, but they must not override repository controls.
 
 ## Decision protocol
 
-Before a controlled decision ChatGPT must establish:
+Before a substantive recommendation or action ChatGPT must establish:
 
 ```text
-1. AUTHORITY: which repository rules govern the action?
-2. STATE: what is the current project/session/mastery state?
-3. SCOPE: which unit/objectives are active?
+1. AUTHORITY: which repository rules govern this?
+2. STATE: what is current project/session/mastery/pipeline health?
+3. SCOPE: which unit/objectives/chat purpose apply?
 4. SOURCES: which authoritative sources are approved/current?
-5. PERMISSION: is this action allowed now?
+5. PERMISSION: is the recommendation/action allowed now?
 6. OUTPUT: which schema/prompt/QA rules apply?
-7. CONSEQUENCE: what state/artifacts must be updated afterward?
+7. CONSEQUENCE: what state/artifacts/change records must be updated?
 ```
 
-If any required item cannot be resolved, ChatGPT must stop at that boundary and mark/report the issue rather than inventing a policy decision.
+If any required element cannot be resolved, ChatGPT must stop at that boundary rather than invent policy from memory.
+
+## Pipeline-health prerequisite
+
+Any action that depends on extraction/enrichment must first verify `state/pipeline-health.json` is `GREEN` for the current pipeline fingerprint.
+
+If the pipeline is `BLOCKED`, `FAILED`, `STALE`, or its fingerprint no longer matches the current pipeline/prompts/QA/workflow inputs:
+
+- do not use the pipeline for trusted extraction/enrichment/artifact generation;
+- diagnose/fix/revalidate first;
+- do not describe pipeline work as complete until a full passing validation is recorded.
 
 ## Control snapshot
 
-To avoid excessive GitHub reads while preserving authority, a session uses a `control_snapshot` containing:
+A study session control snapshot contains repository commit, hashes/versions of mandatory governance documents, objective-map hash, exam scope version, artifact/session schema versions, prompt versions, project/mastery state versions, pipeline-health version/fingerprint, session ID, and timestamp.
 
-- repository commit SHA;
-- hashes/versions of mandatory governance documents;
-- exam scope version;
-- objective-map version/hash;
-- source-policy version;
-- artifact-schema version;
-- prompt versions;
-- project-state version;
-- mastery-state version;
-- session ID;
-- timestamp.
-
-Any material repository change invalidates the snapshot for affected actions and triggers re-resolution.
+Any material repository change invalidates the snapshot for affected actions and requires re-resolution.
 
 ## Artifact creation enforcement
 
-Before artifact generation ChatGPT must verify:
+Before artifact generation verify artifact permission, schema version, approved sources, processing classes, human-reading state where required, objective IDs, prompt versions, source freshness/hashes, existing artifacts/supersession, and pipeline health when extraction/enrichment is involved.
 
-- artifact type is required/allowed by the session;
-- current schema version;
-- approved source IDs;
-- processing classes;
-- human-reading state where required;
-- objective IDs;
-- current prompt versions;
-- current source hashes/freshness;
-- whether an existing artifact should be updated/superseded rather than duplicated.
-
-Canonical output must be schema-valid JSON. Markdown is rendered deterministically. Artifact QA and approval lifecycle cannot be bypassed.
+Canonical artifact output is schema-valid JSON; Markdown is deterministic rendering. QA/approval lifecycle cannot be bypassed.
 
 ## Source-grounding rule
 
-For provider behavior, recommendations, constraints, quotas, pricing mechanics, exam scope, or current AWS training availability, the coordinator must consult/retrieve the authoritative source or approved current artifact.
+For provider behavior, recommendations, constraints, quotas, pricing mechanics, exam scope, or current AWS training availability, consult/retrieve the authoritative source or approved current artifact. Model memory cannot silently substitute for required provider grounding.
 
-Model memory may explain generic concepts, but it cannot silently substitute for required provider grounding.
+## Session/chat scope enforcement
 
-## Session-scope enforcement
-
-If learner discussion drifts to another topic:
-
-- answer a tiny clarifying tangent only if it does not alter study state;
-- otherwise record it as a future question/session candidate and return to active scope;
-- do not silently create a new curriculum path.
-
-The learner can explicitly request a plan change; such a change enters change control rather than taking effect conversationally.
+If learner discussion drifts outside the active purpose, answer only a tiny non-state-changing clarification when useful; otherwise record it as a future question/session candidate and return to scope. Plan changes enter change control rather than taking effect conversationally.
 
 ## State-write rule
 
-After a controlled action, ChatGPT must update the authoritative records that the action changes.
-
-Examples:
-- session start -> session state;
-- completed assessment -> session evidence + mastery evaluation;
-- approved artifact -> artifact registry/session links;
-- source change -> freshness/change record;
-- session completion -> session summary + project state + next permitted action.
-
-A chat message claiming state changed is insufficient if GitHub state was not updated.
+After a controlled action, update the authoritative records affected by it. A chat statement that state changed is insufficient if GitHub was not updated.
 
 ## Fail-closed behavior
 
-The coordinator must fail closed when:
+Fail closed when GitHub authority cannot be read, mandatory documents disagree materially, source/exam freshness cannot be established, pipeline health is not green for a pipeline-dependent action, schema/QA fails, prerequisite evidence is missing, or session/chat state conflicts with the requested action.
 
-- GitHub authoritative state cannot be read;
-- mandatory documents disagree materially;
-- current exam/source freshness cannot be established for a volatile decision;
-- schema/QA validation fails;
-- required prerequisite evidence is missing;
-- session state conflicts with the requested action.
-
-Fail-closed means continue only with non-state-changing explanation/discussion and clearly identify the control blocker.
+Fail-closed allows only non-state-changing explanation of the blocker until the control is restored.
 
 ## No hidden exceptions
 
-Exceptions require:
-
-- explicit reason;
-- affected rule;
-- scope;
-- approver/user instruction when policy-changing;
-- expiration/review condition;
-- change-control record.
-
-ChatGPT must never create an exception merely to make the workflow convenient.
+Exceptions require explicit reason, affected rule, scope, approver/user instruction when policy-changing, expiration/review condition, and change-control record.
 
 ## Enforcement testing
 
-CI/regression tests should verify at minimum:
+CI/regression should verify at minimum:
 
 - invalid session transitions fail;
 - objective IDs must exist;
-- completion without required evidence fails;
-- artifact creation outside allowed session outputs fails where machine-checkable;
-- stale/invalid control snapshot fails;
-- project/mastery/session state cross-references resolve;
-- change records exist for governed version changes.
+- completion without evidence fails;
+- stale control snapshots fail;
+- pipeline-dependent actions fail when pipeline health is not green/current;
+- project/mastery/session/chat/pipeline references resolve;
+- governed changes have change records.
 
 ## Human-facing behavior
 
-The controls should be mostly invisible administratively. ChatGPT should present concise instructions such as:
-
-- what today's session is for;
-- what to read/do;
-- what decision or skill is being tested;
-- whether the session is complete and why;
-- what comes next.
-
-Detailed governance output is shown when requested or when a control failure requires explanation.
+Controls should stay mostly invisible administratively. ChatGPT should present concise instructions and recommendations after repository validation, showing detailed governance only when requested or when a control failure requires explanation.
