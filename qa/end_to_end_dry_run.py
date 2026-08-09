@@ -73,6 +73,7 @@ def main():
 
     s=session_fixture(project)
     check(not session_errors(s,project,mastery),'PLANNED session validates with live pipeline-bound control snapshot')
+    check(s['control_snapshot']['repository_commit_sha'] != '0'*40,'control snapshot records a real repository commit SHA')
     check(s['status']=='PLANNED','PLANNED lifecycle intentionally precedes ChatGPT chat creation')
 
     s['status']='READY'
@@ -86,7 +87,6 @@ def main():
     check(not session_errors(s,p_active,mastery),'ACTIVE session validates')
     check(not chat_errors(c,s),'ACTIVE repository session binds to OPEN ChatGPT chat')
 
-    # Prove pause/resume state is recoverable without chat memory.
     s['status']='PAUSED'; s['pause_state']={'last_completed_activity':'control preflight','next_activity':'resume synthetic validation'}
     c['status']='PAUSED'; c['resume_anchor']={'last_completed_activity':'control preflight','next_activity':'resume synthetic validation','source_locator':None,'current_question_or_decision':None,'pending_artifact_or_qa':None,'unresolved_item':None}
     check(not session_errors(s,p_active,mastery),'PAUSED session validates with restart state')
@@ -106,13 +106,14 @@ def main():
     check(not session_errors(s,p_active,mastery),'REVIEW_PENDING transition validates')
     check(not chat_errors(c,s),'REVIEW_PENDING session remains in same OPEN chat')
 
-    s['status']='COMPLETED'; s['ended_at']=iso(); s['completion_qa']='PASS'; s['next_permitted_action']='Return project to frozen READY_TO_START state; no real study started.'
+    s['status']='COMPLETED'; s['ended_at']=iso(); s['completion_qa']='PASS'; s['next_permitted_action']='Return project to its pre-dry-run frozen technical state; no real study started.'
     c['status']='CLOSED'; c['closed_at']=iso()
     check(not session_errors(s,p_active,mastery),'COMPLETED session passes completion gate')
     check(not chat_errors(c,s),'COMPLETED session requires and validates CLOSED chat')
 
-    p_done=copy.deepcopy(project); p_done['study_status']='READY_TO_START'; p_done['current_unit']=None; p_done['active_session_id']=None; p_done['last_completed_session_id']=None
-    check(not validate_project(p_done),'post-dry-run project state returns to READY_TO_START without recording synthetic session as learner history')
+    # Synthetic validation must restore exactly the current pre-dry-run technical gate state.
+    p_done=copy.deepcopy(project); p_done['current_unit']=None; p_done['active_session_id']=None; p_done['last_completed_session_id']=None
+    check(not validate_project(p_done),'post-dry-run project state preserves current audit/readiness gate state')
     check(p_done['control_gate_status']['study_start_approval']=='BLOCKED','study-start freeze remains intact')
     check(json.dumps(mastery,sort_keys=True)==mastery_before,'mastery remains unchanged')
 
