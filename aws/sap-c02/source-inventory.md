@@ -1,15 +1,15 @@
 # AWS SAP-C02 Official Resource Inventory
 
-Status: **GATE 1 COMPLETE — classifications remain provisional until Gate 2 / pipeline pilot**  
+Status: **APPROVED v1.1 — classifications validated; study start remains frozen**  
 Research date: **2026-08-09**  
 Certification: **AWS Certified Solutions Architect – Professional (SAP-C02)**  
 Source policy: **Official AWS only; current canonical English source preferred**
 
 ## 1. Purpose
 
-This inventory defines the official AWS source universe that may be used to build the SAP-C02 study plan. It is an inventory, **not yet the final study sequence**.
+This inventory defines the official AWS source universe available to the approved SAP-C02 study plan. It is a source inventory, not the study sequence; sequencing and reading depth are governed by `../../docs/04-study-sequence-spec.md`.
 
-The final sequence, reading depth, and per-topic source selection will be defined in Planning Gate 2. The processing classes below are provisional and must be validated by the extraction-pipeline pilot.
+The processing-class model has been validated by the extraction-pipeline pilot and artifact QA controls. Per-topic source selection remains objective-driven and is refreshed under the project freshness policy before use.
 
 ## 2. Authority hierarchy
 
@@ -40,19 +40,19 @@ Defined in [`../../docs/03-source-policy.md`](../../docs/03-source-policy.md):
 - `HANDS_ON`
 - `ASSESSMENT`
 
-All classifications below are **PROVISIONAL** until validated in the extraction pilot.
+These classifications are the approved baseline. A current source packet may apply a documented section-level override under source policy.
 
 ---
 
 # A. Certification scope authorities — mandatory control sources
 
-| Resource | Purpose | Access | Proposed treatment | Study-plan role | Freshness / notes |
+| Resource | Purpose | Access | Treatment | Study-plan role | Freshness / notes |
 |---|---|---|---|---|---|
-| [SAP-C02 Exam Guide](https://docs.aws.amazon.com/aws-certification/latest/solutions-architect-professional-02/solutions-architect-professional-02.html) | Defines target candidate, exam mechanics, four scored domains, emerging/pretest topics, and links to scope references | Free | `READ_FULL_CONTEXTUALIZE` | **Mandatory control source**; snapshot before plan construction and re-check before exam | Current guide is living content; exam code can remain SAP-C02 while guide details evolve |
+| [SAP-C02 Exam Guide](https://docs.aws.amazon.com/aws-certification/latest/solutions-architect-professional-02/solutions-architect-professional-02.html) | Defines target candidate, exam mechanics, four scored domains, emerging/pretest topics, and links to scope references | Free | `READ_FULL_CONTEXTUALIZE` | **Mandatory control source**; snapshot before study and re-check before exam | Current guide is living content; exam code can remain SAP-C02 while guide details evolve |
 | Domain 1–4 task pages | Exact knowledge/skill statements for each task | Free | `READ_FULL_CONTEXTUALIZE` + structured extraction | **Mandatory curriculum mapping source** | Treat task statements as higher authority than course/catalog organization |
 | [Technologies and Concepts](https://docs.aws.amazon.com/aws-certification/latest/solutions-architect-professional-02/sap-technologies-concepts.html) | Non-exhaustive architecture concept categories | Free | `EXTRACT_VALIDATE` | Coverage cross-check | Subject to change; no implied weighting from order |
 | [In-Scope AWS Services](https://docs.aws.amazon.com/aws-certification/latest/solutions-architect-professional-02/sap-02-in-scope-services.html) | Current non-exhaustive list of services/features considered in scope | Free | `EXTRACT_VALIDATE` + versioned snapshot | Coverage/reference control; **not** a service-by-service curriculum | Subject to change; objective mapping determines depth |
-| [Out-of-Scope AWS Services](https://docs.aws.amazon.com/aws-certification/latest/solutions-architect-professional-02/sap-02-out-of-scope-services.html) | Current explicit exclusions | Free | `REFERENCE_ONLY` + snapshot | Prevent unnecessary study | Current canonical page should be re-checked periodically |
+| [Out-of-Scope AWS Services](https://docs.aws.amazon.com/aws-certification/latest/solutions-architect-professional-02/sap-02-out-of-scope-services.html) | Current explicit exclusions | Free | `REFERENCE_ONLY` + snapshot | Prevent unnecessary study | Re-check periodically |
 | Mentions of AWS Services on the Exam | Service naming/short-name behavior | Free | `REFERENCE_ONLY` | Exam mechanics | Re-check near exam date |
 | [Certification landing page](https://aws.amazon.com/certification/certified-solutions-architect-professional/) | Exam logistics and current AWS-recommended preparation entry points | Free | `REFERENCE_ONLY` | Discovery of official prep resources | Training links can change independently of exam guide |
 
@@ -89,130 +89,118 @@ Compute; cost management; database; disaster recovery; high availability; manage
 
 ## Emerging/pretest content
 
-The current guide separately identifies **security and responsible-AI controls** as emerging/pretest material. The guide states these questions do not affect the score. Therefore:
-
-- track this section for freshness;
-- do not allow it to displace scored-domain study time;
-- revisit only after scored-domain coverage is controlled.
+The current guide separately identifies **security and responsible-AI controls** as emerging/pretest material. The guide states these questions do not affect the score. Track for freshness, do not displace scored-domain study time, and revisit only after scored-domain coverage is controlled.
 
 ---
 
 # B. Official AWS structured learning and exam-prep resources
 
-| Resource family | Purpose | Access model | Proposed treatment | Proposed role |
+| Resource family | Purpose | Access model | Treatment | Role |
 |---|---|---|---|---|
-| **SAP-C02 Exam Prep Plan** on AWS Skill Builder | AWS-created certification preparation workflow | Mix of free and subscription content | `ASSESSMENT` + selective teaching | Use as an **exam-prep overlay**, not the architecture curriculum |
-| **AWS Certification Official Practice Question Set** | Short official exam-style question set | Free | `ASSESSMENT` | Early calibration and question-style familiarization; do not consume repeatedly as teaching material |
-| **Exam Prep digital course / enhanced exam prep** | Domain review, exam-style explanations, flashcards, labs/questions depending access tier | Free core / subscription-enhanced | `READ_SELECTIVE_EXTRACT` + `ASSESSMENT` | Use near/after domain learning to detect exam gaps |
-| **AWS Certification Official Practice Exam** | Full official readiness assessment | Subscription/access-dependent | `ASSESSMENT` | Late-stage readiness gate; preserve first attempt value |
-| [Solutions Architect Learning Plan](https://aws.amazon.com/training/learn-about/architect/) | Broad AWS-created learning path explicitly aimed at beginners | Skill Builder | `REFERENCE_ONLY` / gap-remediation | **Do not take end-to-end by default** for an experienced architect; use as a catalog/map for gaps |
-| **Architecting on AWS** (listed as 24-hour on-demand course) | Broad architecture fundamentals and AWS service integration | Skill Builder | `READ_SELECTIVE_EXTRACT` / optional course | Gap-remediation or structured refresher, not mandatory if official documentation path covers objectives efficiently |
-| **AWS Well-Architected Foundations** (listed as 3-hour on-demand course) | Concise introduction to Well-Architected concepts | Skill Builder | `READ_SELECTIVE_EXTRACT` | Optional orientation; framework documentation remains authoritative |
-| **Advanced Architecting on AWS** | Advanced scenario-based architecting course | Classroom/Digital Classroom availability varies | `READ_SELECTIVE_EXTRACT` / optional structured synthesis | High-value optional synthesis if access/time justify it; **not required** by system design |
-| **Solutions Architect Ramp-Up Guide** | AWS-curated index of courses, blogs, whitepapers and other architect resources | Free | `REFERENCE_ONLY` | Discovery aid only; inventory/plan decides what is actually used |
-| **AWS Digital Classroom** | Instructor-led-style digital learning plus labs | Subscription | Optional | Use only if it materially improves learning efficiency over approved source + lab workflow |
+| **SAP-C02 Exam Prep Plan** on AWS Skill Builder | AWS-created certification preparation workflow | Mix of free and subscription content | `ASSESSMENT` + selective teaching | **Exam-prep overlay**, not architecture curriculum |
+| **AWS Certification Official Practice Question Set** | Short official exam-style question set | Free | `ASSESSMENT` | Early calibration; do not consume repeatedly as teaching material |
+| **Exam Prep digital course / enhanced exam prep** | Domain review, explanations, flashcards, labs/questions depending access | Free core / subscription-enhanced | `READ_SELECTIVE_EXTRACT` + `ASSESSMENT` | Use near/after architecture learning to detect exam gaps |
+| **AWS Certification Official Practice Exam** | Full official readiness assessment | Subscription/access-dependent | `ASSESSMENT` | Late readiness gate; preserve first attempt value |
+| [Solutions Architect Learning Plan](https://aws.amazon.com/training/learn-about/architect/) | Broad guided architecture learning path | Skill Builder | `REFERENCE_ONLY` / gap-remediation | Do not take end-to-end by default for an experienced architect |
+| **Architecting on AWS** | Broad architecture fundamentals and service integration | Skill Builder | `READ_SELECTIVE_EXTRACT` / optional | Gap remediation/refresher |
+| **AWS Well-Architected Foundations** | Concise Well-Architected introduction | Skill Builder | `READ_SELECTIVE_EXTRACT` | Optional orientation |
+| **Advanced Architecting on AWS** | Advanced scenario-based architecting | Availability varies | `READ_SELECTIVE_EXTRACT` / optional synthesis | Optional high-value capstone/synthesis |
+| **Solutions Architect Ramp-Up Guide** | AWS-curated architect resource index | Free | `REFERENCE_ONLY` | Discovery only |
+| **AWS Digital Classroom** | Digital structured learning plus labs | Subscription | Optional | Use only when it materially improves learning efficiency |
 
-### Decision for Issue #1
+### Course decision
 
-Official courses are **eligible resources**, not automatically mandatory resources. Planning Gate 2 will decide which course components add unique value versus duplicating architecture publications and labs.
+Official courses are eligible resources, not automatically mandatory resources. `docs/04-study-sequence-spec.md` defines which components add unique value versus duplicating architecture publications and labs.
 
 ---
 
 # C. Official hands-on resources
 
-| Resource | What it provides | Access / environment | Proposed treatment | Proposed study role |
+| Resource | What it provides | Access / environment | Treatment | Study role |
 |---|---|---|---|---|
-| **AWS Builder Labs** | Self-paced guided labs in real AWS environments | Skill Builder subscription | `HANDS_ON` | Core candidate for focused service/integration practice without maintaining every environment manually |
-| **AWS SimuLearn** | Customer/requirements conversations followed by architecture work and live AWS implementation; a Solutions Architect Learning Plan is currently listed | Skill Builder | `HANDS_ON` | **High-value architecture candidate** because it joins requirements, design, communication, and implementation |
-| **AWS Workshops** | AWS-authored self-guided workshops, generally using an AWS account | Free content; workload charges may apply | `HANDS_ON` | Targeted integrated/advanced labs when a workshop maps directly to an objective or architecture unit |
-| [AWS Well-Architected Labs](https://www.wellarchitectedlabs.com/) | Workshops/labs organized around Well-Architected practices | Free content; AWS account/cost may apply | `HANDS_ON` | Architecture review, reliability, cost, operational and other pillar practice |
-| **AWS Cloud Quest** | Role-based immersive/gamified cloud scenarios including solutions architect | Skill Builder | `HANDS_ON` optional | Reinforcement where a relevant advanced scenario exists; not core if slower than direct labs |
-| **Lab Maker** | AI-generated personalized guided labs in a simulated AWS console | Skill Builder Team subscription | `HANDS_ON` experimental | Optional targeted practice; generated labs require QA and must not define curriculum |
-| **AWS Jam Events** | Collaborative challenge-based exercises | Event/team availability | `HANDS_ON` optional | Useful challenge format if accessible; not required |
-| **AWS Jam Journeys** | Former role/domain-based challenge journeys | **Retired June 30, 2026** | **EXCLUDED** | Do not include in plan despite older/generic catalog references |
+| **AWS Builder Labs** | Self-paced guided labs in real AWS environments | Skill Builder subscription | `HANDS_ON` | Core candidate for focused service/integration practice |
+| **AWS SimuLearn** | Requirements conversations, architecture work and live implementation | Skill Builder | `HANDS_ON` | High-value architecture candidate |
+| **AWS Workshops** | AWS-authored self-guided workshops | Free content; workload charges may apply | `HANDS_ON` | Targeted integrated/advanced labs |
+| [AWS Well-Architected Labs](https://www.wellarchitectedlabs.com/) | Labs organized around Well-Architected practices | Free content; account/cost may apply | `HANDS_ON` | Architecture review and pillar practice |
+| **AWS Cloud Quest** | Role-based immersive/gamified scenarios | Skill Builder | `HANDS_ON` optional | Reinforcement where aligned |
+| **Lab Maker** | AI-generated personalized guided labs | Skill Builder Team subscription | `HANDS_ON` experimental | Optional; generated labs require QA |
+| **AWS Jam Events** | Collaborative challenges | Event/team availability | `HANDS_ON` optional | Optional challenge format |
+| **AWS Jam Journeys** | Former role/domain challenge journeys | **Retired June 30, 2026** | **EXCLUDED** | Do not include |
 
-### Hands-on selection rule
-
-The plan should prefer the **lowest-friction official lab that exercises the architectural behavior required by the objective**. A long immersive experience is not automatically better than a focused Builder Lab or Workshop.
+Hands-on selection prioritizes fit to the learning objective and architectural behavior, not product prestige or duration.
 
 ---
 
 # D. Core architecture publications and decision material
 
-| Resource family | Architectural value | Proposed treatment | Proposed role |
+| Resource family | Architectural value | Treatment | Role |
 |---|---|---|---|
-| [AWS Well-Architected Framework](https://docs.aws.amazon.com/wellarchitected/latest/framework/) | Provider-wide principles, trade-offs, best practices across six pillars | `READ_FULL_CONTEXTUALIZE` for foundation/core; pillar sections may use section-level overrides | **Core architecture foundation** and recurring review framework |
-| Well-Architected pillar guidance | Operational Excellence, Security, Reliability, Performance Efficiency, Cost Optimization, Sustainability | Mix of `READ_FULL_CONTEXTUALIZE` and `READ_SELECTIVE_EXTRACT` | Objective-linked architecture principles; avoid reading every subsection indiscriminately |
-| [Well-Architected Lenses](https://docs.aws.amazon.com/wellarchitected/latest/userguide/lenses.html) | Workload/industry-specific interpretation of WAF | `READ_SELECTIVE_EXTRACT` | Use only relevant lenses; **Migration Lens is directly relevant to Domain 4** |
-| [AWS Well-Architected Tool](https://docs.aws.amazon.com/wellarchitected/latest/userguide/intro.html) | Structured workload reviews against WAF | `HANDS_ON` / `REFERENCE_ONLY` | Architecture-review exercises and evidence of design reasoning, not primary reading |
-| [AWS Architecture Center](https://aws.amazon.com/architecture/) | Curated architecture guidance, reference diagrams, patterns, decision material | `REFERENCE_ONLY` discovery + selected `READ_*` sources | Primary discovery hub for architecture-specific sources |
-| [AWS Decision Guides](https://aws.amazon.com/getting-started/decision-guides/) | Structured criteria for choosing among AWS services/options | Usually `READ_FULL_CONTEXTUALIZE`; long guides may be selective | **High-value decision material** for architecture and exam alternatives |
-| AWS Reference Architecture Diagrams | Integrated target designs and service relationships | `READ_SELECTIVE_EXTRACT` + architectural review | Pattern/context source; never copy without deriving requirements/trade-offs |
-| [AWS Prescriptive Guidance](https://docs.aws.amazon.com/prescriptive-guidance/) | Vetted strategies/patterns for migration, modernization, deployment, security, data, operations | Usually `READ_SELECTIVE_EXTRACT`; selected strategy documents may be full-read | Major source for real implementation/architecture patterns |
-| [AWS Security Reference Architecture](https://docs.aws.amazon.com/prescriptive-guidance/latest/security-reference-architecture/introduction.html) | Holistic multi-account security-service placement, guardrails, account structure, alternatives | `READ_SELECTIVE_EXTRACT` with selected narrative/core architecture full-read | **High-value enterprise security/multi-account architecture source** |
-| [Organizing Your AWS Environment Using Multiple Accounts](https://docs.aws.amazon.com/whitepapers/latest/organizing-your-aws-environment/) | OU/account design and isolation/governance strategy | `READ_FULL_CONTEXTUALIZE` candidate | Domain 1 multi-account anchor source |
-| **Establishing Your Cloud Foundation on AWS** | Foundational enterprise/cloud environment guidance | `READ_SELECTIVE_EXTRACT` / selected full-read | Landing-zone/governance context |
-| **AWS Fault Isolation Boundaries** | Failure domains and containment boundaries | `READ_FULL_CONTEXTUALIZE` candidate | Reliability/resilience mental model |
-| [AWS Cloud Adoption Framework (AWS CAF)](https://docs.aws.amazon.com/whitepapers/latest/overview-aws-cloud-adoption-framework/) | Transformation perspectives and cloud adoption capabilities | `READ_SELECTIVE_EXTRACT` | Domain 4/enterprise transformation context; use architecture-relevant sections only |
-| **AWS Solutions Library** | Vetted deployable solutions/reference implementations | `REFERENCE_ONLY` / `HANDS_ON` | Reusable examples and implementation references when directly relevant |
-| [Amazon Builders' Library](https://aws.amazon.com/builders-library/) | Engineering articles from Amazon practitioners on resilient distributed-system operation/design | `READ_SELECTIVE_EXTRACT` supplemental | Deepen architecture reasoning on directly relevant topics (timeouts, retries, overload, shuffle-sharding, static stability, etc.); **not authoritative for AWS service behavior** |
+| [AWS Well-Architected Framework](https://docs.aws.amazon.com/wellarchitected/latest/framework/) | Provider-wide principles/trade-offs across six pillars | `READ_FULL_CONTEXTUALIZE` for foundation; section overrides later | Core foundation/review framework |
+| Well-Architected pillar guidance | Pillar-specific best practices | Mix of full/selective reading | Objective-linked architecture principles |
+| [Well-Architected Lenses](https://docs.aws.amazon.com/wellarchitected/latest/userguide/lenses.html) | Workload/industry interpretation | `READ_SELECTIVE_EXTRACT` | Relevant lenses only; Migration Lens directly supports Domain 4 |
+| [AWS Well-Architected Tool](https://docs.aws.amazon.com/wellarchitected/latest/userguide/intro.html) | Structured workload reviews | `HANDS_ON` / `REFERENCE_ONLY` | Architecture-review exercises |
+| [AWS Architecture Center](https://aws.amazon.com/architecture/) | Architecture guidance/reference patterns | discovery + selected `READ_*` | Primary discovery hub |
+| [AWS Decision Guides](https://aws.amazon.com/getting-started/decision-guides/) | Structured service/option criteria | usually `READ_FULL_CONTEXTUALIZE` | High-value decision material |
+| AWS Reference Architecture Diagrams | Integrated target designs | `READ_SELECTIVE_EXTRACT` + review | Pattern/context source |
+| [AWS Prescriptive Guidance](https://docs.aws.amazon.com/prescriptive-guidance/) | Strategies/patterns for migration, modernization, deployment, security, data, operations | usually `READ_SELECTIVE_EXTRACT` | Major implementation/architecture source |
+| [AWS Security Reference Architecture](https://docs.aws.amazon.com/prescriptive-guidance/latest/security-reference-architecture/introduction.html) | Multi-account security placement/guardrails | `READ_SELECTIVE_EXTRACT` + selected full reading | Enterprise security/multi-account anchor |
+| [Organizing Your AWS Environment Using Multiple Accounts](https://docs.aws.amazon.com/whitepapers/latest/organizing-your-aws-environment/) | OU/account isolation/governance | `READ_FULL_CONTEXTUALIZE` candidate | Domain 1 multi-account anchor |
+| **Establishing Your Cloud Foundation on AWS** | Enterprise cloud foundation | selected `READ_*` | Landing-zone/governance context |
+| **AWS Fault Isolation Boundaries** | Failure containment mental model | `READ_FULL_CONTEXTUALIZE` candidate | Reliability anchor |
+| [AWS Cloud Adoption Framework](https://docs.aws.amazon.com/whitepapers/latest/overview-aws-cloud-adoption-framework/) | Transformation perspectives/capabilities | `READ_SELECTIVE_EXTRACT` | Migration/transformation context |
+| **AWS Solutions Library** | Vetted deployable solutions | `REFERENCE_ONLY` / `HANDS_ON` | Relevant examples/implementations |
+| [Amazon Builders' Library](https://aws.amazon.com/builders-library/) | Amazon engineering reasoning | `READ_SELECTIVE_EXTRACT` supplemental | Deep reasoning only; not service-behavior authority |
 
-### Architecture-publication rule
-
-Architecture publications are selected by **objective and decision problem**, not by a blanket rule such as “read all whitepapers.” The Architecture Center and Ramp-Up Guide are discovery mechanisms; the approved source inventory for each unit determines what is actually read.
+Architecture publications are selected by objective and decision problem, not blanket “read all whitepapers” rules.
 
 ---
 
 # E. Service-level official documentation
 
-Service user guides are necessary, but **full user-guide reading is not the default**.
+Service user guides are necessary, but full-guide reading is not the default.
 
-| Source/section type | Proposed treatment | Why |
+| Source/section type | Treatment | Why |
 |---|---|---|
-| Service overview / core concepts | `READ_SELECTIVE_EXTRACT`; full-read only if conceptually foundational | Establish capabilities, scope, terminology and boundaries |
-| Architecture / design guidance | `READ_FULL_CONTEXTUALIZE` or `READ_SELECTIVE_EXTRACT` | High architectural value |
-| Security sections / security best practices | `READ_SELECTIVE_EXTRACT` | Extract IAM, encryption, network/security boundaries and operational controls |
-| Resilience / availability / DR sections | `READ_SELECTIVE_EXTRACT` | Required for failure-domain and continuity reasoning |
-| Networking/data-flow behavior | `READ_SELECTIVE_EXTRACT` | Required for connectivity, private access, routing and data-transfer decisions |
-| Scaling/performance behavior | `READ_SELECTIVE_EXTRACT` | Required for architecture decision drivers |
-| Monitoring/troubleshooting sections | `EXTRACT_VALIDATE` or targeted `READ_SELECTIVE_EXTRACT` | Architecture-relevant failure signals and operating model |
-| Quotas/limits | `EXTRACT_VALIDATE` + `REFERENCE_ONLY` | Important constraints, but poor end-to-end reading material |
-| API/SDK/CLI references | `REFERENCE_ONLY` | Implementation lookup, not architecture curriculum |
-| How-to tutorials | `HANDS_ON` when chosen for a lab | Learn mechanics only when relevant |
-| Document history/change log | `REFERENCE_ONLY` + automated freshness check candidate | Detect meaningful product/document changes |
+| Service overview/core concepts | selective; full only when foundational | Capabilities/scope/terminology |
+| Architecture/design guidance | full or selective | High architecture value |
+| Security/security best practices | `READ_SELECTIVE_EXTRACT` | IAM/encryption/boundaries/controls |
+| Resilience/availability/DR | `READ_SELECTIVE_EXTRACT` | Failure/continuity reasoning |
+| Networking/data-flow behavior | `READ_SELECTIVE_EXTRACT` | Connectivity/routing/private access |
+| Scaling/performance | `READ_SELECTIVE_EXTRACT` | Decision drivers |
+| Monitoring/troubleshooting | `EXTRACT_VALIDATE` or targeted selective | Operating/failure signals |
+| Quotas/limits | `EXTRACT_VALIDATE` + `REFERENCE_ONLY` | Architecture constraints |
+| API/SDK/CLI | `REFERENCE_ONLY` | Implementation lookup |
+| How-to tutorials | `HANDS_ON` when selected | Mechanics when relevant |
+| Document history/change log | `REFERENCE_ONLY` + freshness signal | Change detection |
 
-### Service-document selection pattern
-
-For each architecture unit, the eventual source packet should start from the decision/problem and pull only the relevant service sections. The system must **not** create a reading plan that walks service manuals from page 1 to the end.
+For each unit, start from the architecture decision/problem and retrieve only relevant service sections.
 
 ---
 
 # F. FAQs, quotas, pricing, and factual references
 
-| Resource family | Proposed treatment | Study role |
+| Resource family | Treatment | Study role |
 |---|---|---|
-| **AWS Product and Technical FAQs** | `EXTRACT_VALIDATE` | Fast extraction of feature distinctions, supported behaviors, and common constraints; validate high-impact facts in canonical docs |
-| **Service Quotas / AWS General Reference quotas and endpoints** | `EXTRACT_VALIDATE` + `REFERENCE_ONLY` | Capture architecturally meaningful hard/default limits, scope (Region/account/resource), and adjustability only when they influence design |
-| **AWS Pricing pages** | `EXTRACT_VALIDATE` + `REFERENCE_ONLY` | Pricing models and cost drivers, not memorization of volatile prices |
-| **AWS Pricing Calculator** | `HANDS_ON` / `REFERENCE_ONLY` | Scenario-based cost modeling; explicitly relevant to SAP-C02 objectives |
-| **AWS Compute Optimizer / Cost Explorer / Budgets / CUR documentation** | selective `READ_SELECTIVE_EXTRACT` + `HANDS_ON` | Cost governance, rightsizing, visibility and continuous-improvement scenarios |
-| Service availability / Regional service data | `REFERENCE_ONLY` | Use when a scenario depends on Region/service availability |
+| AWS Product and Technical FAQs | `EXTRACT_VALIDATE` | Feature distinctions/common constraints; validate high-impact facts in canonical docs |
+| Service Quotas / General Reference | `EXTRACT_VALIDATE` + `REFERENCE_ONLY` | Architecturally meaningful limits/scope/adjustability |
+| AWS Pricing pages | `EXTRACT_VALIDATE` + `REFERENCE_ONLY` | Pricing models/cost drivers, not volatile-price memorization |
+| AWS Pricing Calculator | `HANDS_ON` / `REFERENCE_ONLY` | Scenario cost modeling |
+| Compute Optimizer / Cost Explorer / Budgets / CUR docs | selective + hands-on | Cost governance/rightsizing/visibility |
+| Regional service availability | `REFERENCE_ONLY` | Use only when scenario depends on availability |
 
-### Volatility rule
-
-Do not create flashcards for volatile numeric prices or low-value default limits unless the exam objective specifically makes the distinction important. Teach the **cost/constraint model and lookup method** instead.
+Do not create flashcards for volatile prices or low-value limits unless an exam/architecture distinction truly requires it. Teach the model and lookup method.
 
 ---
 
 # G. Migration and modernization corpus
 
-| Resource | Proposed treatment | Role |
+| Resource | Treatment | Role |
 |---|---|---|
-| [AWS Well-Architected Migration Lens](https://docs.aws.amazon.com/wellarchitected/latest/migration-lens/migration-lens.html) | `READ_FULL_CONTEXTUALIZE` / selected sections depending pilot | Domain 4 anchor: migration phases, 7 Rs, Well-Architected migration considerations |
-| AWS Prescriptive Guidance — migration strategy and patterns | `READ_SELECTIVE_EXTRACT`; selected strategy sections full-read | Detailed assess/mobilize/migrate patterns and implementation guidance |
-| AWS Cloud Adoption Framework | `READ_SELECTIVE_EXTRACT` | Organizational/transformation context around migration and modernization |
-| Migration service user guides (MGN, DMS, DataSync, Migration Hub, Snow Family, Transfer Family, etc.) | Section-level `READ_SELECTIVE_EXTRACT` | Service mechanics/constraints only when mapped to Domain 4 decisions |
-| Reference architectures / modernization patterns | `READ_SELECTIVE_EXTRACT` | Replatform/refactor/modernization decision context |
+| [AWS Well-Architected Migration Lens](https://docs.aws.amazon.com/wellarchitected/latest/migration-lens/migration-lens.html) | full/selective by approved scope | Domain 4 anchor |
+| Prescriptive Guidance migration strategy/patterns | selective; selected strategy full-read | Detailed migration patterns |
+| AWS Cloud Adoption Framework | `READ_SELECTIVE_EXTRACT` | Transformation context |
+| Migration service guides (MGN, DMS, DataSync, Migration Hub, Snow, Transfer Family, etc.) | section-level selective | Mechanics/constraints mapped to decisions |
+| Reference architectures/modernization patterns | `READ_SELECTIVE_EXTRACT` | Replatform/refactor context |
 
 ---
 
@@ -220,10 +208,10 @@ Do not create flashcards for volatile numeric prices or low-value default limits
 
 | Assessment | When to use | Control rule |
 |---|---|---|
-| Official Practice Question Set | Early baseline and question-style familiarization | Record first-attempt reasoning; do not turn answer memorization into mastery evidence |
-| Exam-prep domain questions / flashcards | After learning relevant domain/unit | Use for gap detection, not primary teaching |
-| Official Practice Exam | Late readiness stage | Preserve first attempt; use only after substantial curriculum coverage |
-| System-generated questions | Throughout | Must pass QA/artifact schema rules; clearly distinguish generated assessment from official AWS assessment |
+| Official Practice Question Set | Early baseline/style | Record first-attempt reasoning; memorization is not mastery |
+| Exam-prep domain questions/flashcards | After relevant learning | Gap detection, not primary teaching |
+| Official Practice Exam | Late readiness | Preserve first attempt |
+| System-generated questions | Throughout when authorized | Must pass QA; clearly label as generated, not official AWS |
 
 ---
 
@@ -231,40 +219,39 @@ Do not create flashcards for volatile numeric prices or low-value default limits
 
 | Source | Policy |
 |---|---|
-| AWS Architecture Blog | Use for recent patterns, launches, and examples when canonical architecture/docs are insufficient; label as supplemental |
-| AWS What's New | Freshness/change detection only; follow through to canonical docs before changing study material |
-| AWS Training & Certification Blog | Training availability/change announcements; not exam-scope authority |
-| AWS re:Post / Knowledge Center | Optional troubleshooting evidence; mixed authorship means it is not part of the default authoritative corpus |
-| re:Invent / AWS event sessions | Optional deep-dive enrichment when a topic has high value and current canonical docs are not enough |
-| AWS Samples / AWS-owned GitHub repositories | Labs/reference implementation only after provenance and maintenance status are checked |
+| AWS Architecture Blog | Recent patterns/examples when canonical architecture/docs are insufficient; supplemental |
+| AWS What's New | Freshness/change detection; follow to canonical docs before changing material |
+| AWS Training & Certification Blog | Training availability/change announcements only |
+| AWS re:Post / Knowledge Center | Optional troubleshooting; mixed authorship means not default authority |
+| re:Invent / AWS event sessions | Optional deep-dive enrichment |
+| AWS Samples / AWS-owned GitHub | Labs/reference implementations after provenance/maintenance check |
 
 ---
 
 # J. Explicit exclusions / anti-bloat rules
 
-The default plan **will not** include:
+The default plan does not include:
 
 - third-party certification courses;
 - exam dumps;
-- blanket reading of every AWS whitepaper;
-- blanket reading of every service user guide;
-- API/CLI/SDK references as study curriculum;
+- blanket reading of every AWS whitepaper/service guide;
+- API/CLI/SDK references as curriculum;
 - all Solutions Architect Learning Plan courses end-to-end merely because AWS lists them;
 - every Well-Architected lens;
 - every in-scope AWS service at equal depth;
 - AWS Jam Journeys (retired June 30, 2026);
-- stale localized/cached pages as certification-scope authority;
-- blog posts as substitutes for current canonical documentation;
-- generated labs or AI notes that have not passed the project QA lifecycle.
+- stale localized/cached pages as scope authority;
+- blog posts as substitutes for canonical documentation;
+- generated labs/AI notes that have not passed project QA.
 
 ---
 
 # K. Current SAP-C02 in-scope service snapshot
 
-Source: current canonical English **In-Scope AWS Services** page, retrieved 2026-08-09. AWS states this list is **non-exhaustive and subject to change**. This appendix exists for traceability; it does **not** imply equal study depth.
+Source: canonical English **In-Scope AWS Services** page, retrieved 2026-08-09. AWS states the list is non-exhaustive and subject to change. This appendix is traceability, not equal-depth curriculum.
 
 ### Analytics
-Amazon Athena; AWS Data Exchange; Amazon Data Firehose; Amazon EMR; AWS Glue; Amazon Kinesis Data Streams; AWS Lake Formation; Amazon Managed Service for Apache Flink; Amazon Managed Streaming for Apache Kafka (Amazon MSK); Amazon OpenSearch Service; Amazon QuickSight.
+Amazon Athena; AWS Data Exchange; Amazon Data Firehose; Amazon EMR; AWS Glue; Amazon Kinesis Data Streams; AWS Lake Formation; Amazon Managed Service for Apache Flink; Amazon MSK; Amazon OpenSearch Service; Amazon QuickSight.
 
 ### Application Integration
 Amazon AppFlow; AWS AppSync; Amazon EventBridge; Amazon MQ; Amazon SNS; Amazon SQS; AWS Step Functions.
@@ -325,12 +312,11 @@ Amazon GameLift (Game Tech). The AWS page states the exclusion list is also non-
 
 ---
 
-# L. Resource metadata required in the future per-unit inventory
+# L. Required metadata for per-unit source packets
 
-Each selected source should carry at least:
+Each selected source carries at least:
 
-- source ID;
-- exact title;
+- source ID and exact title;
 - canonical URL;
 - provider (`AWS`);
 - source family/type;
@@ -342,24 +328,23 @@ Each selected source should carry at least:
 - retrieval date;
 - visible publication/revision date where available;
 - supersession/change-log status;
-- access model (`free`, `subscription`, `classroom`, `own-account-cost`, etc.);
+- access model;
 - QA state;
-- notes about conflicts or freshness risk.
+- conflict/freshness notes.
 
 ---
 
-# M. Gate 1 conclusions for Planning Gate 2
+# M. Operational conclusions
 
-1. **The exam guide and task pages are the syllabus authority.** AWS courses are teaching resources, not the curriculum source of truth.
-2. **Well-Architected is foundational but does not replace service/decision documentation.** Gate 2 must decide how much framework material is read upfront versus interleaved by architecture domain.
-3. **Service user guides should be section-selected, not read end-to-end by default.**
-4. **Decision Guides, Prescriptive Guidance, SRA, selected whitepapers, reference architectures, and Migration Lens are central architecture-enrichment sources.**
-5. **Hands-on should mix focused labs and integrated scenarios.** Builder Labs, SimuLearn, Workshops, and Well-Architected Labs are the strongest current candidates; Cloud Quest/Jam Events are optional; Jam Journeys are retired.
-6. **Official exam prep is an overlay and assessment layer**, not the primary professional-architecture learning path.
-7. **Freshness must be a first-class control.** Live AWS scope pages and service documentation can change during a multi-month study program.
-8. **Resource selection must remain objective-driven.** The in-scope service list is broad and non-exhaustive; studying every listed service equally would create unnecessary work.
+1. The exam guide/task pages are syllabus authority; courses are teaching resources.
+2. Well-Architected is foundational but does not replace service/decision documentation.
+3. Service guides are section-selected, not read end-to-end by default.
+4. Decision Guides, Prescriptive Guidance, SRA, selected whitepapers/reference architectures, and Migration Lens are central architecture-enrichment sources.
+5. Hands-on mixes focused labs and integrated scenarios; Builder Labs, SimuLearn, Workshops, and Well-Architected Labs are primary candidates; Cloud Quest/Jam Events optional; Jam Journeys retired.
+6. Official exam prep is an overlay/assessment layer, not the primary professional-architecture learning path.
+7. Freshness is first-class because AWS scope/docs can change during study.
+8. Resource selection is objective-driven; the in-scope list does not imply equal depth.
 
 ## Gate status
 
-**Issue #1 deliverable complete.**  
-Next dependency: **Issue #2 — define the study sequence and final read/extract/lab policy.**
+**Resource inventory, sequence classification, pipeline pilot, and artifact QA dependencies are complete.** The inventory remains freshness-controlled and must be rechecked where `docs/13-change-control-freshness.md` requires it. Real study remains separately frozen by `state/project-state.json`.
