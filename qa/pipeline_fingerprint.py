@@ -9,6 +9,11 @@ FILES = [
     'prompts/extract-v1.md',
     'prompts/enrich-v1.md',
     'prompts/qa-v1.md',
+    'prompts/enrich-qa-v1.md',
+    'schemas/semantic-pipeline-v1.schema.json',
+    'qa/validate_semantic_pipeline.py',
+    'qa/semantic_pipeline_regression.py',
+    'qa/fixtures/semantic-valid.json',
     '.github/workflows/pipeline-smoke.yml',
 ]
 

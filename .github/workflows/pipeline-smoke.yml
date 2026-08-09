@@ -5,13 +5,21 @@ on:
     paths:
       - 'pipeline/**'
       - 'prompts/**'
-      - 'qa/**'
+      - 'schemas/semantic-pipeline-v1.schema.json'
+      - 'qa/validate_semantic_pipeline.py'
+      - 'qa/semantic_pipeline_regression.py'
+      - 'qa/fixtures/semantic-valid.json'
+      - 'qa/pipeline_fingerprint.py'
       - '.github/workflows/pipeline-smoke.yml'
   pull_request:
     paths:
       - 'pipeline/**'
       - 'prompts/**'
-      - 'qa/**'
+      - 'schemas/semantic-pipeline-v1.schema.json'
+      - 'qa/validate_semantic_pipeline.py'
+      - 'qa/semantic_pipeline_regression.py'
+      - 'qa/fixtures/semantic-valid.json'
+      - 'qa/pipeline_fingerprint.py'
       - '.github/workflows/pipeline-smoke.yml'
   workflow_dispatch:
 
@@ -33,7 +41,7 @@ jobs:
           python3 -m venv .venv
           . .venv/bin/activate
           python -m pip install --upgrade pip
-          python -m pip install trafilatura pymupdf4llm reportlab
+          python -m pip install trafilatura pymupdf4llm reportlab 'jsonschema[format]'
 
       - name: Verify tools
         run: |
@@ -60,10 +68,11 @@ jobs:
           assert meta['normalizer']=='native-text', meta
           assert 'General design principles' in text
           assert len(text) > 500
+          assert meta.get('source_sha256') and meta.get('normalized_sha256')
           print(meta)
           PY
 
-      - name: Test service-guide native Markdown path and constraints
+      - name: Test service-guide native Markdown path and architecture constraints
         run: |
           . .venv/bin/activate
           python pipeline/ingest.py \
@@ -71,9 +80,17 @@ jobs:
             --out work/gateway-route-tables.md
           python - <<'PY'
           from pathlib import Path
-          t=Path('work/gateway-route-tables.md').read_text()
-          assert 'Rules and considerations' in t
-          assert 'Asymmetric routing is not supported' in t
+          t=Path('work/gateway-route-tables.md').read_text().lower()
+          sentinels=[
+            'rules and considerations',
+            'asymmetric routing is not supported',
+            'transit gateway',
+            'prefix list',
+            'gateway load balancer endpoint',
+            'running instance'
+          ]
+          missing=[x for x in sentinels if x not in t]
+          assert not missing, f'architecture-significant sentinel loss: {missing}'
           PY
 
       - name: Test factual/quota native Markdown path
@@ -85,15 +102,16 @@ jobs:
           grep -q 'What is Service Quotas' work/service-quotas.md
           grep -q 'adjustable' work/service-quotas.md
 
-      - name: Test HTML cleanup path
+      - name: Test HTML cleanup path with boundaries
         run: |
           . .venv/bin/activate
           cat > /tmp/sample.html <<'HTML'
-          <!doctype html><html><body><nav>NAVIGATION NOISE</nav><main><h1>Architecture Guidance</h1><p>Critical content.</p><h2>Trade-offs</h2><ul><li>Latency.</li><li>Cost.</li></ul></main><footer>FOOTER NOISE</footer></body></html>
+          <!doctype html><html><body><nav>NAVIGATION NOISE</nav><main><h1>Architecture Guidance</h1><p>Critical content.</p><h2>Rules</h2><p><strong>Important:</strong> This path is supported only when symmetry is preserved.</p><h2>Trade-offs</h2><ul><li>Latency.</li><li>Cost.</li></ul></main><footer>FOOTER NOISE</footer></body></html>
           HTML
           python pipeline/ingest.py --file /tmp/sample.html --out work/sample-html.md
           grep -q 'Architecture Guidance' work/sample-html.md
           grep -q 'Critical content' work/sample-html.md
+          grep -q 'only when symmetry is preserved' work/sample-html.md
 
       - name: Test PDF path
         run: |
@@ -105,11 +123,13 @@ jobs:
           c=canvas.Canvas(p,pagesize=letter)
           c.setFont('Helvetica-Bold',16); c.drawString(72,740,'Architecture Guidance')
           c.setFont('Helvetica',11); c.drawString(72,715,'Use independent failure domains.')
+          c.drawString(72,695,'Exception: this pattern does not provide synchronous replication.')
           c.save()
           PY
           python pipeline/ingest.py --file /tmp/sample.pdf --out work/sample-pdf.md
           grep -q 'Architecture Guidance' work/sample-pdf.md
           grep -q 'independent failure domains' work/sample-pdf.md
+          grep -q 'does not provide synchronous replication' work/sample-pdf.md
 
       - name: Test prompt bundle determinism
         run: |
@@ -120,6 +140,19 @@ jobs:
           from pathlib import Path
           assert Path('work/waf-bundle-1.md').read_bytes() == Path('work/waf-bundle-2.md').read_bytes()
           PY
+
+      - name: Validate strict semantic extraction and enrichment contract
+        run: |
+          . .venv/bin/activate
+          PYTHONPATH=qa python qa/validate_semantic_pipeline.py qa/fixtures/semantic-valid.json
+          PYTHONPATH=qa python qa/semantic_pipeline_regression.py
+
+      - name: Verify semantic QA prompt contracts
+        run: |
+          grep -q 'factual fidelity = 5/5' prompts/qa-v1.md
+          grep -q 'HIGH-severity' prompts/qa-v1.md
+          grep -q 'orphan inference' prompts/enrich-qa-v1.md
+          grep -q 'material semantic drift' prompts/enrich-qa-v1.md
 
       - name: Print validated pipeline fingerprint
         run: python qa/pipeline_fingerprint.py

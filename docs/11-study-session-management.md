@@ -1,6 +1,6 @@
 # Study Session Management Specification
 
-Status: **APPROVED v1**  
+Status: **APPROVED v1.1**  
 Certification: **AWS SAP-C02**
 
 ## Purpose
@@ -36,34 +36,37 @@ Required:
 - unit/objective mapping;
 - session type;
 - intended sources/activities;
-- entry criteria.
+- entry criteria;
+- predecessor session/handoff relationship if one exists.
 
 ### READY
-All prerequisites, required governance reads, source approvals, and required prior sessions are satisfied.
+All prerequisites, required governance reads, source approvals, required prior sessions, and predecessor-handoff checks are satisfied.
 
 ### ACTIVE
 Learner has started the session. Only one normal SAP-C02 study session may be `ACTIVE` at a time unless the coordinator records an explicit parallel-session exception.
+
+A successor with a predecessor may not become ACTIVE until it has formally consumed the predecessor handoff.
 
 ### PAUSED
 Session is intentionally interrupted. Resume data must be sufficient to continue without reconstructing state from chat memory.
 
 ### REVIEW_PENDING
-Primary activity is done but closure checks remain: artifact QA, assessment grading, mastery update, unresolved questions, cleanup, or summary.
+Primary activity is done but closure checks remain: artifact QA, assessment grading, mastery update, unresolved questions, cleanup, summary, or handoff preparation.
 
 ### COMPLETED
-All completion criteria pass. Completion is a controlled state transition, not a conversational phrase.
+All completion criteria pass, including mandatory formal handoff creation. Completion is a controlled state transition, not a conversational phrase.
 
 ### ARCHIVED
-Completed historical record retained for retrieval. Archival does not remove evidence links.
+Completed historical record retained for retrieval. Archival does not remove evidence or handoff links.
 
 ### BLOCKED
 A required dependency, source, control check, lab environment, or unresolved critical issue prevents progress.
 
 ### ABORTED
-Session intentionally ended without meeting completion criteria. Reason and useful evidence are retained.
+Session intentionally ended without meeting normal completion criteria. Reason/useful evidence are retained and a formal handoff still records what can safely continue.
 
 ### SUPERSEDED
-Historical record replaced/corrected by a newer explicitly linked record; original remains immutable.
+Historical record replaced/corrected by a newer explicitly linked record; original remains immutable and retains a formal handoff/correction trail.
 
 ## Session types
 
@@ -95,6 +98,9 @@ Each session records:
 - authoritative documents consulted at session creation;
 - source packet IDs/URLs;
 - prerequisite session IDs;
+- predecessor session ID where one exists;
+- consumed predecessor handoff ID where applicable;
+- its own mandatory terminal handoff ID when terminal;
 - required artifact types;
 - planned activity and exit criteria;
 - start/end timestamps;
@@ -113,10 +119,12 @@ Each session records:
 
 ```text
 sessions/<session-id>/session.json
+sessions/<session-id>/chat.json
+sessions/<session-id>/handoff.json
 sessions/<session-id>/summary.md
 ```
 
-`session.json` is canonical. `summary.md` is deterministic/rendered or coordinator-maintained from the canonical record and must not contradict it.
+`session.json` is canonical for session state. `handoff.json` is canonical for cross-session continuity. `summary.md` is an index and must not contradict canonical records.
 
 Artifacts remain under `artifacts/`; session records link to them rather than embedding duplicate authoritative copies.
 
@@ -133,7 +141,8 @@ The coordinator must prove:
 5. source processing follows policy;
 6. the source packet is current enough for the planned work;
 7. required artifact schemas/prompts are current;
-8. any required lab/assessment is allowed at this stage.
+8. any required lab/assessment is allowed at this stage;
+9. if a predecessor exists, its handoff exists, is current, and is linked to this successor correctly.
 
 If these cannot be established, the session is `BLOCKED`, not improvised.
 
@@ -149,7 +158,8 @@ At the beginning of an actual learner interaction, ChatGPT internally resolves a
 - prior unresolved misconceptions;
 - required outputs;
 - exit criteria;
-- current control snapshot.
+- current control snapshot;
+- predecessor handoff consumption/reconciliation where applicable.
 
 The learner should receive a concise orientation, not the full administrative manifest unless requested.
 
@@ -158,6 +168,7 @@ The learner should receive a concise orientation, not the full administrative ma
 ChatGPT must:
 
 - use only approved sources for authoritative claims;
+- require semantic-integrity PASS for trusted extraction/enrichment outputs;
 - record new unresolved questions rather than invent answers;
 - create only artifacts permitted by the session manifest;
 - link artifacts/evidence to the session ID;
@@ -165,7 +176,7 @@ ChatGPT must:
 - record meaningful plan deviations explicitly;
 - distinguish teaching discussion from mastery evidence;
 - preserve H3/H4 lab solution withholding rules;
-- update pause/resume information before a session is interrupted.
+- update pause/resume information before interruption.
 
 ## Pause/resume
 
@@ -179,7 +190,9 @@ A paused session must record:
 - lab state/cleanup risk if applicable;
 - learner evidence already captured.
 
-On resume, ChatGPT consults `session.json` before using conversational context. Old conversation content may help presentation but does not override session state.
+On resume, ChatGPT consults `session.json` before conversational context. Old conversation content may help presentation but does not override session state.
+
+Pause/resume within the same session does not create a successor handoff. A transfer to a different controlled session follows `docs/19-session-handoff-continuity.md`.
 
 ## Completion gate
 
@@ -188,15 +201,19 @@ A session may transition to `COMPLETED` only if:
 1. declared exit criteria are satisfied;
 2. required reading/activity is recorded;
 3. required artifacts exist and have required QA state;
-4. required lab cleanup is complete or explicitly transferred to a controlled follow-up;
+4. required lab cleanup is complete or explicitly represented in continuity state;
 5. assessment result is recorded when applicable;
 6. misconceptions discovered are recorded;
 7. mastery/progress updates have been evaluated under `docs/09-progress-mastery-spec.md`;
-8. unresolved HIGH-severity blocker is zero or explicitly moves the session to `BLOCKED` instead;
+8. unresolved HIGH-severity blocker is zero or session becomes `BLOCKED` instead;
 9. `next_permitted_action` is resolved from repository state;
-10. session completion QA passes.
+10. mandatory `handoff.json` is created and validates;
+11. chat closure/target state matches the handoff;
+12. session completion QA passes.
 
-ChatGPT must not mark a session complete because the learner says “done” if mandatory controls are unmet. It should explain the remaining controlled step concisely.
+`ABORTED` and `SUPERSEDED` are also terminal and require formal handoff records describing what state can safely continue.
+
+ChatGPT must not mark a session complete because the learner says “done” if mandatory controls are unmet.
 
 ## Session summary
 
@@ -209,13 +226,22 @@ Every completed session must have a compact summary optimized for future retriev
 - misconceptions/gaps;
 - mastery impact;
 - unresolved items;
-- next permitted action.
+- next permitted action;
+- handoff ID.
 
-This summary is an index, not a replacement for approved artifacts.
+This summary is an index, not a replacement for approved artifacts or the handoff record.
+
+## Formal handoff continuity
+
+Cross-session continuity is governed by `docs/19-session-handoff-continuity.md`.
+
+A terminal session always produces handoff state even if no successor has yet been selected. A successor must explicitly record `predecessor_session_id` and `consumed_handoff_id`; active-or-later successor state without that consumption is invalid.
+
+The coordinator, not the learner, creates and consumes these records.
 
 ## Historical retrieval
 
-When asked to revisit older study work, ChatGPT should search GitHub by session ID, unit, objective, artifact ID, or topic, then consult the canonical session/artifact state.
+When asked to revisit older study work, ChatGPT should search GitHub by session ID, unit, objective, artifact ID, or topic, then consult canonical session/chat/handoff/artifact state.
 
 It should not reconstruct old sessions from model memory when repository records exist.
 
@@ -226,10 +252,10 @@ Completed session history is append-only in meaning.
 If a material error is discovered:
 
 1. create correction/superseding record;
-2. link original session;
+2. link original session/handoff;
 3. update affected artifact/mastery state under change control;
-4. preserve the original audit trail.
+4. preserve original audit trail.
 
 ## Administrative burden rule
 
-Routine session creation, state transitions, summaries, evidence linking, and mastery updates are coordinator responsibilities. The learner should not be asked to manually maintain GitHub records unless automation is unavailable and the missing action is genuinely necessary.
+Routine session creation, state transitions, summaries, evidence linking, mastery updates, handoff generation, and handoff consumption are coordinator responsibilities. The learner should not be asked to manually maintain GitHub records unless automation is unavailable and the missing action is genuinely necessary.

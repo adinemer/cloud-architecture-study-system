@@ -1,23 +1,25 @@
 {
   "state_type": "PROJECT_STATE",
   "schema_version": "1.0.0",
-  "state_version": "1.0.7",
+  "state_version": "1.0.9",
   "certification": "SAP-C02",
   "exam_scope_version": "2026-08-09",
   "study_status": "READY_TO_START",
   "current_unit": null,
   "active_session_id": null,
   "last_completed_session_id": null,
-  "next_permitted_action": "Technical and governance readiness is complete. Real SAP-C02 study remains frozen: do not create or start a real study session/chat until the user explicitly unfreezes and grants study-start approval. Non-study inspection, validation, tooling, pipeline demonstrations, and governed control refinement remain allowed.",
+  "next_permitted_action": "Pre-unfreeze hardening is technically complete. Real SAP-C02 study remains frozen: do not create or start a real controlled study session/chat until the user explicitly unfreezes and grants study-start approval. When study later begins, trusted extraction/enrichment requires both current GREEN pipeline health and packet-level semantic-integrity PASS, and every terminal controlled session must produce a formal handoff consumed by any successor.",
   "control_gate_status": {
     "resource_inventory": "PASS",
     "study_sequence": "PASS",
     "extraction_pipeline": "PASS",
     "pipeline_health": "PASS",
+    "semantic_pipeline_integrity": "PASS",
     "artifact_qa": "PASS",
     "progress_mastery": "PASS",
     "session_management": "PASS",
     "chat_session_management": "PASS",
+    "mandatory_session_handover": "PASS",
     "study_operating_routine": "PASS",
     "study_tool_policy": "PASS",
     "coordinator_governance": "PASS",
@@ -27,5 +29,5 @@
     "final_readiness_audit": "PASS",
     "study_start_approval": "BLOCKED"
   },
-  "updated_at": "2026-08-09T12:45:00Z"
+  "updated_at": "2026-08-09T13:27:00Z"
 }

@@ -1,28 +1,31 @@
 {
   "state_type": "PIPELINE_HEALTH",
   "schema_version": "1.0.0",
-  "state_version": "1.0.0",
+  "state_version": "1.1.1",
   "health": "GREEN",
-  "pipeline_fingerprint": "2c45981e1970daff84e63b5b282578e1d3dff15b1ed52410ca04cfe191288a58",
-  "validated_commit_sha": "88760cb136ab446cd8ab8533e86b9262afa2e8f3",
+  "pipeline_fingerprint": "bacbc5169f0cdef741e90e5b2fd2e5cb9d1d18cbef511489e18167073759615a",
+  "validated_commit_sha": "1e8c74e9732a6b68c0336a20e1156aea129f61b2",
   "workflow_name": "pipeline-smoke",
-  "workflow_run_id": 31312212318,
-  "workflow_job_id": 93241624242,
-  "validated_at": "2026-08-09T12:01:38Z",
+  "workflow_run_id": 31315611758,
+  "workflow_job_id": 93250242281,
+  "validated_at": "2026-08-09T13:31:00Z",
   "required_stages": [
     "Fedora runtime and dependencies",
-    "AWS provider-native Markdown acquisition",
-    "service-guide constraint preservation",
+    "AWS provider-native Markdown acquisition with provenance hashes",
+    "service-guide architecture constraint sentinel preservation",
     "factual/quota native Markdown acquisition",
-    "HTML cleanup fallback",
-    "PDF normalization fallback",
+    "HTML cleanup fallback with conditional-boundary preservation",
+    "PDF normalization fallback with exception preservation",
     "deterministic prompt bundling",
+    "strict semantic extraction/enrichment schema validation",
+    "semantic negative regression suite",
+    "extraction QA and enrichment QA prompt contract checks",
     "pipeline fingerprint generation",
     "artifact QA regression"
   ],
   "last_failure": {
     "status": "superseded_by_successful_validation",
-    "note": "User reported the previous pipeline state/run as failed. Full replacement validation run 31312212318 passed all mandatory pipeline stages; artifact QA run 31312212353 also passed."
+    "note": "Pre-unfreeze hardening initially failed pipeline-smoke run 31315170474 because a new architecture sentinel used case-sensitive matching for a current AWS phrase. The boundary remained present. The test was corrected without removing the boundary and replacement runs 31315301223 and final exact-state run 31315611758 passed every hardened stage."
   },
-  "next_permitted_action": "Pipeline-dependent demonstrations/control work are allowed only while this GREEN fingerprint matches current extraction-affecting files. Real study remains separately frozen."
+  "next_permitted_action": "Hardened pipeline is GREEN for the current fingerprint. Trusted extraction/enrichment additionally requires per-packet semantic-integrity PASS. Real study remains frozen until separate explicit study-start approval."
 }

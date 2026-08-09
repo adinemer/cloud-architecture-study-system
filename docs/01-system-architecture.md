@@ -1,6 +1,6 @@
 # Study System Architecture
 
-Status: **APPROVED v1.0 — pre-study architecture**
+Status: **APPROVED v1.1 — pre-study architecture**
 
 ## Logical architecture
 
@@ -9,10 +9,10 @@ GOVERNANCE / CONTROL
   - charter + ChatGPT operating spec
   - certification source of truth + objective map
   - source policy + study sequence
-  - extraction/pipeline-health controls
+  - extraction/pipeline-health + semantic-integrity controls
   - artifact schema + QA
   - progress/mastery state
-  - study-session + ChatGPT-chat controls
+  - study-session + ChatGPT-chat + handoff controls
   - operating routine + tool policy
   - change/freshness control
           |
@@ -20,14 +20,19 @@ GOVERNANCE / CONTROL
 KNOWLEDGE PIPELINE
   discover -> validate -> classify -> acquire -> normalize
   -> grounded extraction -> extraction QA -> required human reading
-  -> summarize -> architecture enrichment -> cross-source synthesis
-  -> artifact generation -> artifact QA -> approve/version
+  -> architecture enrichment -> enrichment QA -> semantic integrity PASS
+  -> cross-source synthesis -> artifact generation -> artifact QA -> approve/version
           |
           v
 STUDY EXPERIENCE
   orient -> cold recall -> read/review/discuss -> decide
   -> lab/failure exercise -> retrieve/assess -> remediate
-  -> evidence/mastery update -> close/archive session
+  -> evidence/mastery update -> formal handoff -> close/archive session
+          |
+          v
+NEXT CONTROLLED CHAT
+  consume predecessor handoff -> reload current GitHub state
+  -> reconcile continuity -> activate single purpose
 ```
 
 ## Design principles
@@ -41,23 +46,26 @@ Before substantive study-system recommendations or controlled actions, ChatGPT r
 ### 3. Separate extraction from interpretation
 The pipeline first establishes provider-grounded facts/recommendations and validates them. Architectural enrichment happens only after grounded extraction passes QA.
 
-### 4. Section-level classification
+### 4. No silent semantic gaps
+Operational pipeline success is necessary but not sufficient. Every production source packet accounts for selected sections and must pass strict semantic-integrity validation. Missing sections, orphan claims/inferences, unreviewed HIGH claims, unresolved HIGH conflicts, qualifier loss, or material semantic drift fail closed.
+
+### 5. Section-level classification
 Large provider documents may contain architecture reasoning, tutorials, references, quotas, and troubleshooting. Processing class therefore applies at document and section level.
 
-### 5. Minimum viable pipeline
+### 6. Minimum viable pipeline
 Use inspectable Markdown/JSON, deterministic scripts, and small objective-driven source packets. Add RAG/vector/agent/custom-app infrastructure only after measured need.
 
-### 6. Explicit pipeline health
+### 7. Explicit pipeline health
 Trusted extraction/enrichment requires `state/pipeline-health.json` to be `GREEN` for the current pipeline fingerprint. Failed/stale pipeline state blocks downstream trust.
 
-### 7. Persistent provenance
-Every approved study artifact remains traceable to certification scope/objectives, provider sources, source hashes, processing class, schema/prompt versions, model ID, QA state, and study session.
+### 8. Persistent provenance
+Every approved study artifact remains traceable to certification scope/objectives, provider sources, source hashes, processing class, schema/prompt versions, model ID, semantic/QA state, and study session.
 
-### 8. Evidence-based learning state
+### 9. Evidence-based learning state
 Reading and generated notes are activities, not mastery. Exam readiness, architecture mastery, and hands-on capability are tracked independently from controlled evidence.
 
-### 9. Single-purpose chat/session model
-One controlled ChatGPT chat maps to one repository study session and one meaningful learning purpose. GitHub stores resumable/authoritative state so conversation history is optional context.
+### 10. Single-purpose chat/session model with formal continuity
+One controlled ChatGPT chat maps to one repository study session and one meaningful learning purpose. Every terminal controlled session produces a formal handoff. A successor with a predecessor must consume that exact handoff and reconcile it with current GitHub authority before activation. Conversation history is optional context, never the continuity source of truth.
 
 ## Implemented control document set
 
@@ -78,19 +86,21 @@ One controlled ChatGPT chat maps to one repository study session and one meaning
 - `15-study-tool-policy.md`
 - `16-chat-session-management.md`
 - `17-pipeline-health-spec.md`
+- `18-semantic-pipeline-integrity.md`
+- `19-session-handoff-continuity.md`
 - `aws/sap-c02/source-inventory.md`
 - `aws/sap-c02/objective-map.md`
 
-Architecture enrichment does **not** require a separate `06-*` governance document in v1. Its contract is intentionally owned by `05-extraction-pipeline-spec.md`, `prompts/enrich-v1.md`, artifact schemas, and QA controls to avoid duplicate authority.
+Architecture enrichment does **not** require a separate `06-*` governance document in v1. Its production contract is intentionally composed from `05-extraction-pipeline-spec.md`, the versioned extraction/enrichment/enrichment-QA prompts, `18-semantic-pipeline-integrity.md`, artifact schemas, and QA controls to avoid duplicate authority.
 
 ## Machine-control layers
 
-- `schemas/` — artifact/session/chat/state/change/pipeline-health contracts;
+- `schemas/` — artifact/session/chat/handoff/semantic/state/change/pipeline-health contracts;
 - `state/` — authoritative project, mastery, and pipeline-health state;
-- `sessions/` — controlled learner session/chat history;
+- `sessions/` — controlled learner session/chat/handoff history;
 - `pipeline/` — deterministic source acquisition/normalization/bundling;
-- `prompts/` — versioned extraction/enrichment/artifact/QA contracts;
-- `qa/` — validators, regressions, dry runs, readiness evidence;
+- `prompts/` — versioned extraction/enrichment/enrichment-QA/artifact/QA contracts;
+- `qa/` — validators, semantic/handoff regressions, dry runs, readiness evidence;
 - `.github/workflows/` — Fedora pipeline, artifact, and control-plane CI.
 
 ## Study-start boundary
