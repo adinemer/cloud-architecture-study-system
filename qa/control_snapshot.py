@@ -29,7 +29,7 @@ def build(session_id):
       'created_at':datetime.now(timezone.utc).isoformat(),
       'governance_hashes':{x:h(x) for x in GOVERNANCE},
       'objective_map_hash':h('aws/sap-c02/objective-map.md'),
-      'artifact_schema_version':'1.0.0','session_schema_version':'1.1.0',
+      'artifact_schema_version':'1.0.0','session_schema_version':'1.2.0',
       'prompt_versions':['extract-v1','enrich-v1','qa-v1','artifact-v1','artifact-qa-v1'],
       'project_state_version':project['state_version'],'mastery_state_version':mastery['state_version'],
       'pipeline_health_state_version':pipeline['state_version'],
