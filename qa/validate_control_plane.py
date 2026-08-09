@@ -58,6 +58,11 @@ def validate_snapshot(snap):
         if sha256_path(rel) != digest: errors.append(f'control snapshot stale governance hash: {rel}')
     obj='aws/sap-c02/objective-map.md'
     if sha256_path(obj) != snap.get('objective_map_hash'): errors.append('control snapshot stale objective_map_hash')
+    pipeline=json.loads((ROOT/'state/pipeline-health.json').read_text())
+    if pipeline.get('health') != 'GREEN': errors.append(f"current pipeline health is {pipeline.get('health')}, expected GREEN")
+    if snap.get('pipeline_health_state_version') != pipeline.get('state_version'): errors.append('control snapshot pipeline_health_state_version mismatch')
+    if snap.get('pipeline_health') != pipeline.get('health'): errors.append('control snapshot pipeline_health mismatch')
+    if snap.get('pipeline_fingerprint') != pipeline.get('pipeline_fingerprint'): errors.append('control snapshot pipeline_fingerprint mismatch')
     return errors
 
 def validate_session(session, project, mastery, all_sessions):
