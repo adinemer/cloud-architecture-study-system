@@ -13,25 +13,34 @@ The pilot has two equal goals:
 
 ## Current phase
 
-**System design — no certification study has started yet.**
+**Pre-study control system complete — real certification study has not started yet.**
 
 Completed gates:
 
 - ✅ authoritative AWS SAP-C02 resource inventory;
 - ✅ controlled study sequence and read/extract/reference/lab policy;
 - ✅ Fedora-compatible extraction pipeline pilot and benchmark;
-- ✅ study-artifact schemas, provenance, QA, deterministic rendering, and anti-drift CI.
+- ✅ study-artifact schemas, provenance, QA, deterministic rendering, and anti-drift CI;
+- ✅ evidence-based progress/mastery model;
+- ✅ controlled study-session lifecycle and historical session records;
+- ✅ repository-first ChatGPT coordinator governance;
+- ✅ change-control/versioning/freshness policy;
+- ✅ machine-readable project/mastery/session/change schemas;
+- ✅ cross-file control-plane validation and negative regression tests;
+- ✅ synthetic end-to-end study control dry run in Fedora CI;
+- ✅ final READY_TO_START integrity validation.
 
-Still required before study starts:
+Still required before real study starts:
 
-- progress/mastery-state specification;
-- change-control/versioning/freshness operating specification;
-- final end-to-end dry run of one unit using the complete control stack;
-- explicit study-start approval under the charter.
+- **explicit user study-start approval under the charter.**
 
 ## Governing principle
 
-Provider material is the source of truth. Versioned specifications in this repository control the process. AI executes within those controls rather than inventing the study process session by session.
+Provider material is the source of truth. Versioned specifications and state in this repository control the process. ChatGPT must consult the authoritative repository state before controlled study decisions or artifact creation; conversation context and model memory do not override GitHub.
+
+## Session trust model
+
+A ChatGPT conversation is an interaction surface, not the authoritative study record. Real study work is organized into schema-controlled sessions under `sessions/`, with controlled creation, pause/resume, completion, artifact/evidence links, mastery updates, and retrieval history.
 
 ## Artifact trust model
 
@@ -39,12 +48,19 @@ Canonical study artifacts are schema-valid JSON. Markdown is rendered determinis
 
 ## Repository status
 
-- System version: `0.4-planning`
+- System version: `1.0-prestudy`
 - Pilot: `AWS SAP-C02`
-- Study status: `NOT STARTED`
+- Study status: `READY_TO_START` (study-start approval pending)
 - Resource inventory: `APPROVED_V1`
 - Study sequence/source policy: `APPROVED_V1`
 - Extraction pipeline: `APPROVED_V1_WITH_GUARDRAILS`
 - Artifact/QA controls: `APPROVED_V1`
+- Progress/mastery controls: `APPROVED_V1`
+- Session management: `APPROVED_V1`
+- Coordinator governance: `APPROVED_V1`
+- Change/freshness controls: `APPROVED_V1`
+- End-to-end dry run: `PASS`
 
-See [`docs/`](docs/), [`schemas/`](schemas/), [`pipeline/`](pipeline/), and [`qa/`](qa/).
+Authoritative current state: [`state/project-state.json`](state/project-state.json).
+
+See [`docs/`](docs/), [`schemas/`](schemas/), [`state/`](state/), [`pipeline/`](pipeline/), and [`qa/`](qa/).
