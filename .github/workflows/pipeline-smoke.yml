@@ -80,12 +80,14 @@ jobs:
             --out work/gateway-route-tables.md
           python - <<'PY'
           from pathlib import Path
-          t=Path('work/gateway-route-tables.md').read_text()
+          t=Path('work/gateway-route-tables.md').read_text().lower()
           sentinels=[
-            'Rules and considerations',
-            'Asymmetric routing is not supported',
-            'Transit Gateway',
-            'prefix list'
+            'rules and considerations',
+            'asymmetric routing is not supported',
+            'transit gateway',
+            'prefix list',
+            'gateway load balancer endpoint',
+            'running instance'
           ]
           missing=[x for x in sentinels if x not in t]
           assert not missing, f'architecture-significant sentinel loss: {missing}'
