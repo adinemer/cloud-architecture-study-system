@@ -35,7 +35,7 @@ def artifact_fixture():
 def session_fixture(project,mastery):
     sid='SAP-C02-U00-S999'
     return {
-      'session_id':sid,'schema_version':'1.0.0','certification':'SAP-C02','exam_scope_version':project['exam_scope_version'],
+      'session_id':sid,'schema_version':'1.1.0','certification':'SAP-C02','exam_scope_version':project['exam_scope_version'],
       'unit_ids':['U00'],'objective_ids':[],'session_type':'SCOPE_BASELINE','status':'PLANNED',
       'control_snapshot':build_snapshot(sid),'authorities_consulted':sorted(REQUIRED_AUTHORITIES),'sources':['aws-vpc-gateway-route-tables'],
       'prerequisite_sessions':[],'required_artifact_types':['source_summary'],
@@ -55,7 +55,7 @@ def main():
     check(not validate_mastery(mastery),'initial mastery state valid')
 
     s=session_fixture(project,mastery)
-    check(not session_errors(s,project,mastery),'PLANNED session validates with live control snapshot')
+    check(not session_errors(s,project,mastery),'PLANNED session validates with live control snapshot including pipeline health')
 
     s['status']='READY'
     check(not session_errors(s,project,mastery),'READY transition validates')
