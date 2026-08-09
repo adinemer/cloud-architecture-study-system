@@ -20,15 +20,21 @@ def git_sha():
 def build(session_id):
     project=json.loads((ROOT/'state/project-state.json').read_text())
     mastery=json.loads((ROOT/'state/mastery-state.json').read_text())
+    pipeline=json.loads((ROOT/'state/pipeline-health.json').read_text())
+    if pipeline.get('health') != 'GREEN':
+        raise RuntimeError(f"cannot create control snapshot while pipeline health is {pipeline.get('health')}")
     return {
       'snapshot_id':f"{session_id}-snapshot-{datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%SZ')}",
       'repository_commit_sha':git_sha(),
       'created_at':datetime.now(timezone.utc).isoformat(),
       'governance_hashes':{x:h(x) for x in GOVERNANCE},
       'objective_map_hash':h('aws/sap-c02/objective-map.md'),
-      'artifact_schema_version':'1.0.0','session_schema_version':'1.0.0',
+      'artifact_schema_version':'1.0.0','session_schema_version':'1.1.0',
       'prompt_versions':['extract-v1','enrich-v1','qa-v1','artifact-v1','artifact-qa-v1'],
-      'project_state_version':project['state_version'],'mastery_state_version':mastery['state_version']
+      'project_state_version':project['state_version'],'mastery_state_version':mastery['state_version'],
+      'pipeline_health_state_version':pipeline['state_version'],
+      'pipeline_health':pipeline['health'],
+      'pipeline_fingerprint':pipeline['pipeline_fingerprint']
     }
 
 def main():
