@@ -1,13 +1,13 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://github.com/adinemer/cloud-architecture-study-system/schemas/session-v1.schema.json",
-  "title": "Controlled Study Session v1",
+  "title": "Controlled Study Session v1.1",
   "type": "object",
   "additionalProperties": false,
   "required": ["session_id","schema_version","certification","exam_scope_version","unit_ids","objective_ids","session_type","status","control_snapshot","authorities_consulted","sources","prerequisite_sessions","required_artifact_types","planned_activity","exit_criteria","activities_completed","artifacts","evidence","misconceptions","mastery_changes","unresolved_items","next_permitted_action","completion_qa"],
   "properties": {
     "session_id": {"type":"string","pattern":"^SAP-C02-U[0-9]{2}-S[0-9]{3}$"},
-    "schema_version": {"const":"1.0.0"},
+    "schema_version": {"const":"1.1.0"},
     "certification": {"const":"SAP-C02"},
     "exam_scope_version": {"type":"string","minLength":1},
     "unit_ids": {"type":"array","items":{"type":"string","pattern":"^U[0-9]{2}$"},"minItems":1,"uniqueItems":true},
@@ -16,7 +16,7 @@
     "status": {"enum":["PLANNED","READY","ACTIVE","PAUSED","REVIEW_PENDING","COMPLETED","ARCHIVED","BLOCKED","ABORTED","SUPERSEDED"]},
     "control_snapshot": {
       "type":"object","additionalProperties":false,
-      "required":["snapshot_id","repository_commit_sha","created_at","governance_hashes","objective_map_hash","artifact_schema_version","session_schema_version","prompt_versions","project_state_version","mastery_state_version"],
+      "required":["snapshot_id","repository_commit_sha","created_at","governance_hashes","objective_map_hash","artifact_schema_version","session_schema_version","prompt_versions","project_state_version","mastery_state_version","pipeline_health_state_version","pipeline_health","pipeline_fingerprint"],
       "properties": {
         "snapshot_id":{"type":"string","minLength":1},
         "repository_commit_sha":{"type":"string","pattern":"^[a-f0-9]{40}$"},
@@ -24,10 +24,13 @@
         "governance_hashes":{"type":"object","minProperties":1,"additionalProperties":{"type":"string","pattern":"^[a-f0-9]{64}$"}},
         "objective_map_hash":{"type":"string","pattern":"^[a-f0-9]{64}$"},
         "artifact_schema_version":{"type":"string","minLength":1},
-        "session_schema_version":{"const":"1.0.0"},
+        "session_schema_version":{"const":"1.1.0"},
         "prompt_versions":{"type":"array","items":{"type":"string","minLength":1},"uniqueItems":true},
         "project_state_version":{"type":"string","minLength":1},
-        "mastery_state_version":{"type":"string","minLength":1}
+        "mastery_state_version":{"type":"string","minLength":1},
+        "pipeline_health_state_version":{"type":"string","minLength":1},
+        "pipeline_health":{"const":"GREEN"},
+        "pipeline_fingerprint":{"type":"string","pattern":"^[a-f0-9]{64}$"}
       }
     },
     "authorities_consulted":{"type":"array","items":{"type":"string","minLength":1},"minItems":1,"uniqueItems":true},
