@@ -1,0 +1,70 @@
+{
+  "meta": {
+    "artifact_id": "aws-sap-c02-u03-gateway-routing-architecture-note",
+    "artifact_type": "architecture_note",
+    "schema_version": "1.0.0",
+    "artifact_version": "1.0.0",
+    "status": "APPROVED",
+    "provider": "AWS",
+    "certification": "SAP-C02",
+    "exam_scope_version": "2026-08-09",
+    "unit_ids": ["U03"],
+    "objective_ids": ["1.1"],
+    "architecture_domains": ["networking"],
+    "processing_classes": ["READ_SELECTIVE_EXTRACT"],
+    "source_ids": ["aws-vpc-gateway-route-tables"],
+    "prompt_versions": ["extract-v1", "enrich-v1", "qa-v1"],
+    "model_id": "regression-fixture",
+    "generated_at": "2026-08-09T09:00:00Z",
+    "last_reviewed_at": "2026-08-09T09:00:00Z",
+    "qa_state": "PASS"
+  },
+  "sources": [{
+    "source_id": "aws-vpc-gateway-route-tables",
+    "title": "Gateway route tables",
+    "canonical_url": "https://docs.aws.amazon.com/vpc/latest/userguide/gateway-route-tables.html",
+    "retrieved_url": "https://docs.aws.amazon.com/vpc/latest/userguide/gateway-route-tables.md",
+    "provider": "AWS",
+    "retrieved_at": "2026-08-09T08:54:15Z",
+    "source_sha256": "432d19d8dec8d07bc52c5b1fc6c1e92fd4aad9421f7b99791254ef0685c0ddc9",
+    "normalized_sha256": "fa3517d75103d22e399951105931f53f40494a0c2b0dc4bdecbfd10de6c57a68",
+    "source_type": "service_user_guide",
+    "processing_class": "READ_SELECTIVE_EXTRACT",
+    "human_reading_scope": "Rules and considerations",
+    "visible_revision": null
+  }],
+  "claims": [
+    {
+      "claim_id": "c001",
+      "label": "PROVIDER_FACT",
+      "text": "Gateway route tables have routing constraints that must be considered when inserting middleboxes.",
+      "source_refs": [{"source_id": "aws-vpc-gateway-route-tables", "locator": "Rules and considerations"}],
+      "confidence": "HIGH",
+      "severity": "HIGH"
+    },
+    {
+      "claim_id": "c002",
+      "label": "ARCHITECTURAL_INFERENCE",
+      "text": "A middlebox design should be checked for symmetry before choosing gateway route-table insertion.",
+      "source_refs": [{"source_id": "aws-vpc-gateway-route-tables", "locator": "Rules and considerations"}],
+      "confidence": "HIGH",
+      "severity": "HIGH",
+      "inference_rationale": "Routing constraints can invalidate an otherwise plausible inspection path."
+    }
+  ],
+  "content": {
+    "problem_statement": "Insert inspection into VPC traffic without violating gateway route-table behavior.",
+    "requirements_and_drivers": ["Preserve supported routing behavior", "Keep traffic inspection predictable"],
+    "provider_grounding": ["c001"],
+    "design_implications": ["c002"],
+    "tradeoffs": ["Centralized inspection can simplify controls but increases routing dependencies."],
+    "failure_modes": ["Unsupported routing assumptions can cause traffic loss."],
+    "security_implications": ["Inspection placement must match the intended security boundary."],
+    "reliability_implications": ["Routing dependencies add failure paths that need validation."],
+    "performance_implications": ["Inspection adds a data-path hop."],
+    "cost_implications": ["Additional appliances or routing constructs can add processing/data-transfer cost."],
+    "operational_implications": ["Route changes require controlled testing."],
+    "decision_change_triggers": ["Change in traffic path or inspection architecture"],
+    "open_questions": []
+  }
+}
