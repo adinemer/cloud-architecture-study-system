@@ -13,11 +13,11 @@ Equal goals:
 
 ## Current phase
 
-**Final pre-study readiness audit in progress. Real certification study has not started.**
+**Final pre-study readiness audit passed. The system is technically `READY_TO_START`; real certification study remains explicitly frozen.**
 
-Implemented control areas:
+Validated control areas:
 
-- authoritative AWS SAP-C02 resource inventory and objective map;
+- authoritative AWS SAP-C02 resource inventory and complete scored-objective map;
 - architecture-first study sequence and read/extract/reference/lab policy;
 - Fedora-compatible extraction pipeline with explicit `GREEN` fingerprint health state;
 - grounded extraction before architectural enrichment;
@@ -29,8 +29,10 @@ Implemented control areas:
 - SUN–THU 08:00–16:00 work-aware study/retention routine with FRI–SAT weekend;
 - approved study-tool policy and local-only personal-note default;
 - change-control/versioning/freshness policy;
-- machine-readable project/mastery/session/chat/change/pipeline-health schemas;
-- negative regressions and synthetic end-to-end session/chat dry run.
+- machine-readable project/mastery/session/chat/change/pipeline-health contracts;
+- negative-path governance regressions;
+- static pre-study readiness audit;
+- synthetic end-to-end session + ChatGPT chat lifecycle dry run.
 
 ## Governing principle
 
@@ -50,9 +52,10 @@ Canonical study artifacts are schema-valid JSON. Markdown is rendered determinis
 
 ## Study-start boundary
 
-Technical readiness does not itself authorize study. The explicit user study-start gate is independent and currently remains blocked/frozen.
+Technical readiness does not authorize study by itself. `study_start_approval` remains `BLOCKED` until the learner explicitly unfreezes study in a separate instruction. No real session/chat may be created before then.
 
-Authoritative current state: [`state/project-state.json`](state/project-state.json).
+Authoritative current state: [`state/project-state.json`](state/project-state.json).  
+Final audit evidence: [`qa/readiness-audit-2026-08-09.md`](qa/readiness-audit-2026-08-09.md).
 
 ## Repository map
 
