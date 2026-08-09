@@ -3,65 +3,33 @@ name: control-plane
 on:
   push:
     paths:
-      - 'docs/09-progress-mastery-spec.md'
-      - 'docs/11-study-session-management.md'
-      - 'docs/12-coordinator-governance.md'
-      - 'docs/13-change-control-freshness.md'
-      - 'docs/14-study-operating-routine.md'
-      - 'docs/15-study-tool-policy.md'
-      - 'docs/16-chat-session-management.md'
-      - 'docs/17-pipeline-health-spec.md'
-      - 'schemas/session-v1.schema.json'
-      - 'schemas/chat-session-v1.schema.json'
-      - 'schemas/state-v1.schema.json'
-      - 'schemas/change-v1.schema.json'
-      - 'schemas/pipeline-health-v1.schema.json'
+      - 'README.md'
+      - 'docs/**'
+      - 'aws/sap-c02/**'
+      - 'schemas/**'
       - 'state/**'
       - 'sessions/**'
       - 'changes/**'
       - 'pipeline/**'
-      - 'prompts/extract-v1.md'
-      - 'prompts/enrich-v1.md'
-      - 'prompts/qa-v1.md'
-      - 'qa/validate_control_plane.py'
-      - 'qa/validate_chat_sessions.py'
-      - 'qa/validate_pipeline_health.py'
-      - 'qa/pipeline_fingerprint.py'
-      - 'qa/control_regression.py'
-      - 'qa/control_snapshot.py'
-      - 'qa/end_to_end_dry_run.py'
+      - 'prompts/**'
+      - 'qa/**'
       - '.github/workflows/pipeline-smoke.yml'
+      - '.github/workflows/artifact-qa.yml'
       - '.github/workflows/control-plane.yml'
   pull_request:
     paths:
-      - 'docs/09-progress-mastery-spec.md'
-      - 'docs/11-study-session-management.md'
-      - 'docs/12-coordinator-governance.md'
-      - 'docs/13-change-control-freshness.md'
-      - 'docs/14-study-operating-routine.md'
-      - 'docs/15-study-tool-policy.md'
-      - 'docs/16-chat-session-management.md'
-      - 'docs/17-pipeline-health-spec.md'
-      - 'schemas/session-v1.schema.json'
-      - 'schemas/chat-session-v1.schema.json'
-      - 'schemas/state-v1.schema.json'
-      - 'schemas/change-v1.schema.json'
-      - 'schemas/pipeline-health-v1.schema.json'
+      - 'README.md'
+      - 'docs/**'
+      - 'aws/sap-c02/**'
+      - 'schemas/**'
       - 'state/**'
       - 'sessions/**'
       - 'changes/**'
       - 'pipeline/**'
-      - 'prompts/extract-v1.md'
-      - 'prompts/enrich-v1.md'
-      - 'prompts/qa-v1.md'
-      - 'qa/validate_control_plane.py'
-      - 'qa/validate_chat_sessions.py'
-      - 'qa/validate_pipeline_health.py'
-      - 'qa/pipeline_fingerprint.py'
-      - 'qa/control_regression.py'
-      - 'qa/control_snapshot.py'
-      - 'qa/end_to_end_dry_run.py'
+      - 'prompts/**'
+      - 'qa/**'
       - '.github/workflows/pipeline-smoke.yml'
+      - '.github/workflows/artifact-qa.yml'
       - '.github/workflows/control-plane.yml'
   workflow_dispatch:
 
@@ -97,6 +65,10 @@ jobs:
         run: |
           . .venv/bin/activate
           PYTHONPATH=qa python qa/control_regression.py
+      - name: Run final pre-study readiness static audit
+        run: |
+          . .venv/bin/activate
+          python qa/readiness_audit.py
       - name: Validate change records
         run: |
           . .venv/bin/activate
@@ -112,7 +84,7 @@ jobs:
               assert not errs, (p,[e.message for e in errs])
           print(f'PASS change records ({len(files)})')
           PY
-      - name: Run synthetic end-to-end study control dry run
+      - name: Run synthetic end-to-end study control and chat dry run
         run: |
           . .venv/bin/activate
           PYTHONPATH=qa python qa/end_to_end_dry_run.py
