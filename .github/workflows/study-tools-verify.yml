@@ -1,0 +1,23 @@
+name: study-tools-verify
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/study-tools-verify.yml'
+      - '.study-tools-verify-trigger'
+  workflow_dispatch:
+
+jobs:
+  verify-fedora-packages:
+    runs-on: ubuntu-latest
+    container:
+      image: fedora:latest
+    steps:
+      - name: Check candidate packages in official Fedora repositories
+        run: |
+          set +e
+          for p in apostrophe anki neovim emacs git ripgrep ghostwriter kate; do
+            echo "===== $p ====="
+            dnf -q info "$p"
+            echo "EXIT:$?"
+          done
