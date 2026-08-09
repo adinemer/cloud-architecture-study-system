@@ -7,12 +7,14 @@ on:
       - 'prompts/**'
       - 'qa/**'
       - '.github/workflows/pipeline-smoke.yml'
+      - '.pipeline-health-trigger'
   pull_request:
     paths:
       - 'pipeline/**'
       - 'prompts/**'
       - 'qa/**'
       - '.github/workflows/pipeline-smoke.yml'
+      - '.pipeline-health-trigger'
   workflow_dispatch:
 
 jobs:
