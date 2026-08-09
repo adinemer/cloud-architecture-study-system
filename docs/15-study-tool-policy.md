@@ -1,6 +1,6 @@
 # Study Tool Policy and Initial Toolset
 
-Status: **APPROVED v1 — study start remains frozen**  
+Status: **APPROVED v1.1 — study start remains frozen**  
 Verified: **Fedora 44 official repositories, 2026-08-09**
 
 ## Eligibility rule
@@ -52,19 +52,7 @@ Role:
 - decision explanations in learner's own words;
 - links/references to controlled session/artifact IDs.
 
-Not used for:
-- authoritative study artifacts;
-- session state;
-- provider-source copies;
-- mastery state.
-
-Why selected:
-- native Markdown;
-- distraction-free;
-- FOSS;
-- official Fedora package;
-- no proprietary database/format;
-- works directly with the repository/local Markdown model.
+Not used for authoritative artifacts, session state, provider-source copies, or mastery state.
 
 ### 2. Git — authoritative local version-control client
 
@@ -72,12 +60,7 @@ Why selected:
 
 Verified in Fedora 44 official `updates` repository.
 
-Role:
-- synchronize/inspect repository state;
-- version personal Markdown when stored with approved study workspace;
-- review changes/diffs when useful.
-
-Routine Git administration remains primarily coordinator/system responsibility.
+Role: synchronize/inspect repository state and review diffs when useful. Routine Git administration remains primarily coordinator/system responsibility.
 
 ### 3. ripgrep — fast local retrieval/search
 
@@ -85,56 +68,44 @@ Routine Git administration remains primarily coordinator/system responsibility.
 
 Verified in Fedora 44 official `updates` repository.
 
-Role:
-- find session IDs, terms, misconceptions, artifact references, and personal notes quickly;
-- complement GitHub search without adding an indexing/database service.
+Role: find session IDs, terms, misconceptions, artifact references, and personal notes without adding an indexing/database service.
 
 ### 4. Neovim — optional power-user editor
 
 **Status: APPROVED OPTIONAL TOOL**
 
-Verified in Fedora 44 official `updates` repository.
-
-Use only if the learner prefers terminal editing/search workflows. It is not required when Ghostwriter is sufficient.
+Verified in Fedora 44 official `updates` repository. Use only if preferred; not required when Ghostwriter is sufficient.
 
 ### 5. Kate — optional general editor
 
 **Status: APPROVED OPTIONAL TOOL**
 
-Verified in Fedora 44 official `updates` repository.
-
-Use for structured file browsing/editing when a traditional editor is preferred. It is not necessary solely for study.
+Verified in Fedora 44 official `updates` repository. Optional traditional editor/file browser.
 
 ## Not approved / not selected
 
 ### Anki
 
-Fedora 44 official repositories did **not** contain a package named `anki` during the 2026-08-09 verification run.
+Fedora 44 official repositories did not contain a package named `anki` during the 2026-08-09 verification. It is not a core dependency unless a future check verifies an acceptable official Flatpak/container distribution meeting the policy.
 
-It is therefore **not approved as a core tool under the current distribution rule** unless a future check verifies an acceptable official Flatpak or official container distribution that meets the learner's requirements.
-
-The study system does not depend on Anki: canonical flashcards remain JSON/Markdown artifacts and ChatGPT coordinates spaced retrieval directly.
+The system does not depend on Anki: canonical flashcards remain JSON/Markdown artifacts and ChatGPT coordinates spaced retrieval.
 
 ### Apostrophe
 
-Fedora 44 official repositories did **not** contain a package named `apostrophe` during the 2026-08-09 verification run. It is not selected.
+Fedora 44 official repositories did not contain a package named `apostrophe` during verification. It is not selected.
 
 ### Obsidian / Logseq / Joplin / other note applications
 
-Not approved by default. They may be evaluated later only if:
+Not approved by default. Evaluate only if an acceptable official distribution/free-or-FOSS condition is verified and the candidate solves a measured limitation of the Ghostwriter + Markdown + Git/ripgrep workflow.
 
-- an acceptable official Fedora/Flatpak/container distribution is verified;
-- their free/FOSS terms meet the policy;
-- they solve a measured limitation of the Ghostwriter + Markdown + Git/ripgrep workflow.
+## Personal notes storage — resolved default
 
-Do not add them for backlinks/graph features alone.
+Personal notes are **local-only by default and are not committed to the public study-system repository**.
 
-## Personal notes storage
-
-Recommended local layout:
+Recommended local layout outside the public repository:
 
 ```text
-personal-notes/
+~/Documents/cloud-study-notes/
   aws/
     sap-c02/
       Uxx/
@@ -142,29 +113,35 @@ personal-notes/
         misconceptions/
 ```
 
-Whether `personal-notes/` is committed to the public repository must be explicitly decided before real study. Personal notes can contain learner-specific mistakes/reflections and may be better stored locally or in a private repository. Do not publish personal/proprietary information accidentally.
+Reason:
+- notes may contain learner-specific mistakes/reflections;
+- they are not authoritative study state;
+- public publication adds no learning value and creates unnecessary privacy/noise risk.
+
+A private Git repository may be adopted later for backup/versioning if desired, but that is optional and does not block study. Controlled artifact/session IDs can be linked from personal notes without copying authoritative content.
 
 ## Spaced repetition without a dedicated SRS app
 
-The v1 retention system uses the existing controlled flashcard artifact plus session/mastery state:
+The v1 retention system uses controlled flashcard artifacts plus session/mastery state:
 
-1. artifact JSON contains approved cards;
+1. approved artifact JSON contains cards;
 2. coordinator determines due retrieval windows under `docs/14-study-operating-routine.md`;
-3. ChatGPT presents cards/architecture prompts without showing answers first;
+3. ChatGPT presents cards/architecture prompts without revealing answers first;
 4. response quality is recorded as evidence;
 5. weak items are scheduled sooner;
-6. mastered items are spaced farther apart;
+6. strong items are spaced farther apart;
 7. higher-order decision/scenario retrieval is preferred over unlimited card growth.
 
-This avoids a separate SRS database and keeps study state auditable in GitHub.
+This avoids duplicate SRS state.
 
 ## Tool-change rule
 
-Adding/replacing a core study tool is a governed control/toolchain change. Before adoption:
+Adding/replacing a core study tool is governed. Before adoption:
 
+- consult current repository state first;
 - verify eligibility;
-- identify what current problem it solves;
+- identify the measured problem it solves;
 - assess data portability;
 - define authoritative vs convenience role;
 - avoid duplicate state;
-- update this document and change-control record when material.
+- update this policy/change record when material.
