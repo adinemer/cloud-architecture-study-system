@@ -1,0 +1,119 @@
+name: pipeline-smoke
+
+on:
+  push:
+    paths:
+      - 'pipeline/**'
+      - 'prompts/**'
+      - 'qa/**'
+      - '.github/workflows/pipeline-smoke.yml'
+  workflow_dispatch:
+
+jobs:
+  fedora-smoke:
+    runs-on: ubuntu-latest
+    container:
+      image: fedora:latest
+    steps:
+      - name: Install system dependencies
+        run: |
+          dnf -y install git python3 python3-pip pandoc poppler-utils ca-certificates
+
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Create isolated Python environment
+        run: |
+          python3 -m venv .venv
+          . .venv/bin/activate
+          python -m pip install --upgrade pip
+          python -m pip install trafilatura pymupdf4llm reportlab
+
+      - name: Verify tools
+        run: |
+          . .venv/bin/activate
+          python --version
+          trafilatura --version
+          pandoc --version | head -1
+          pdftotext -v 2>&1 | head -1
+
+      - name: Test provider-native AWS Markdown path
+        run: |
+          . .venv/bin/activate
+          mkdir -p work
+          python pipeline/ingest.py \
+            --url 'https://docs.aws.amazon.com/wellarchitected/latest/framework/general-design-principles.html' \
+            --out work/waf.md
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('work/waf.md')
+          meta=json.loads(Path('work/waf.md.source.json').read_text())
+          text=p.read_text()
+          assert meta['retrieved_from'].endswith('.md'), meta
+          assert meta['normalizer']=='native-text', meta
+          assert 'General design principles' in text
+          assert len(text) > 500
+          print(meta)
+          PY
+
+      - name: Test service-guide native Markdown path and constraints
+        run: |
+          . .venv/bin/activate
+          python pipeline/ingest.py \
+            --url 'https://docs.aws.amazon.com/vpc/latest/userguide/gateway-route-tables.html' \
+            --out work/gateway-route-tables.md
+          python - <<'PY'
+          from pathlib import Path
+          t=Path('work/gateway-route-tables.md').read_text()
+          assert 'Rules and considerations' in t
+          assert 'Asymmetric routing is not supported' in t
+          PY
+
+      - name: Test factual/quota native Markdown path
+        run: |
+          . .venv/bin/activate
+          python pipeline/ingest.py \
+            --url 'https://docs.aws.amazon.com/servicequotas/latest/userguide/intro.html' \
+            --out work/service-quotas.md
+          grep -q 'What is Service Quotas' work/service-quotas.md
+          grep -q 'adjustable' work/service-quotas.md
+
+      - name: Test HTML cleanup path
+        run: |
+          . .venv/bin/activate
+          cat > /tmp/sample.html <<'HTML'
+          <!doctype html><html><body><nav>NAVIGATION NOISE</nav><main><h1>Architecture Guidance</h1><p>Critical content.</p><h2>Trade-offs</h2><ul><li>Latency.</li><li>Cost.</li></ul></main><footer>FOOTER NOISE</footer></body></html>
+          HTML
+          python pipeline/ingest.py --file /tmp/sample.html --out work/sample-html.md
+          grep -q 'Architecture Guidance' work/sample-html.md
+          grep -q 'Critical content' work/sample-html.md
+
+      - name: Test PDF path
+        run: |
+          . .venv/bin/activate
+          python - <<'PY'
+          from reportlab.lib.pagesizes import letter
+          from reportlab.pdfgen import canvas
+          p='/tmp/sample.pdf'
+          c=canvas.Canvas(p,pagesize=letter)
+          c.setFont('Helvetica-Bold',16); c.drawString(72,740,'Architecture Guidance')
+          c.setFont('Helvetica',11); c.drawString(72,715,'Use independent failure domains.')
+          c.save()
+          PY
+          python pipeline/ingest.py --file /tmp/sample.pdf --out work/sample-pdf.md
+          grep -q 'Architecture Guidance' work/sample-pdf.md
+          grep -q 'independent failure domains' work/sample-pdf.md
+
+      - name: Test prompt bundle determinism
+        run: |
+          . .venv/bin/activate
+          python pipeline/make_bundle.py --source work/waf.md --prompt prompts/extract-v1.md --out work/waf-bundle-1.md
+          python pipeline/make_bundle.py --source work/waf.md --prompt prompts/extract-v1.md --out work/waf-bundle-2.md
+          cmp work/waf-bundle-1.md work/waf-bundle-2.md
+
+      - name: Upload normalized smoke outputs
+        uses: actions/upload-artifact@v4
+        with:
+          name: pipeline-smoke-output
+          path: work/
