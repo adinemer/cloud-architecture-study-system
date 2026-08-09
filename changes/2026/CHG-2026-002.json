@@ -1,0 +1,43 @@
+{
+  "change_id": "CHG-2026-002",
+  "schema_version": "1.0.0",
+  "change_class": "C4",
+  "timestamp": "2026-08-09T12:05:00Z",
+  "initiator": "ChatGPT coordinator under explicit user approval",
+  "reason": "Correct the authoritative workweek to SUN-THU with FRI-SAT weekend, extend repository-first enforcement to substantive study-system recommendations, and establish a hard current-GREEN extraction-pipeline health invariant with fingerprint validation.",
+  "old_version_or_hash": "study-routine/coordinator/pipeline-health controls before 2026-08-09 correction",
+  "new_version_or_hash": "control-plane-v1.1-pipeline-health-v1",
+  "affected_items": [
+    "docs/12-coordinator-governance.md",
+    "docs/14-study-operating-routine.md",
+    "docs/17-pipeline-health-spec.md",
+    "schemas/pipeline-health-v1.schema.json",
+    "state/pipeline-health.json",
+    "state/project-state.json",
+    "qa/pipeline_fingerprint.py",
+    "qa/validate_pipeline_health.py",
+    "qa/control_snapshot.py",
+    "qa/validate_control_plane.py",
+    ".github/workflows/pipeline-smoke.yml",
+    ".github/workflows/control-plane.yml"
+  ],
+  "affected_units": [],
+  "affected_objectives": [],
+  "affected_artifacts": [],
+  "affected_sessions": [],
+  "required_qa": [
+    "Full Fedora extraction pipeline smoke validation",
+    "Artifact QA regression",
+    "Pipeline fingerprint/current-health validation",
+    "Full control-plane validation after governance changes"
+  ],
+  "migration_actions": [
+    "Use SUN-THU as workdays and FRI-SAT as weekend in all future study scheduling.",
+    "Consult current GitHub authority/state before substantive study-system recommendations as well as controlled actions.",
+    "Block trusted extraction/enrichment when pipeline health is not GREEN or the recorded fingerprint is stale.",
+    "Require complete pipeline revalidation after extraction-affecting changes before restoring GREEN."
+  ],
+  "approval_status": "APPROVED",
+  "approved_by": "User approval granted in conversation on 2026-08-09",
+  "effective_at": "2026-08-09T12:05:00Z"
+}
