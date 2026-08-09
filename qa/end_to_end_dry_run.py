@@ -63,8 +63,12 @@ def main():
     target='SAP-C02-U00-S999'; hid='HO-SAP-C02-U00-S998-001'; s1['status']='COMPLETED'; s1['ended_at']=iso(); s1['completion_qa']='PASS'; s1['next_permitted_action']=f'Create successor {target} and consume {hid}.'; s1['handoff_id']=hid; c1['status']='CLOSED'; c1['closed_at']=iso(); c1['handoff_target_session_id']=target; h1=make_handoff(s1,c1,hid,target)
     check(not session_errors(s1,p_active,mastery,sessions),'COMPLETED predecessor validates'); check(not chat_errors(c1,s1),'CLOSED predecessor chat validates'); check(not validate_handoff(h1,s1,c1),'mandatory predecessor handoff validates')
 
-    s2=session_fixture(project,target,pred=s1['session_id'],consumed=hid); sessions[target]=s2
-    # Successor explicitly consumes predecessor handoff before READY/ACTIVE.
+    s2=session_fixture(project,target,pred=s1['session_id'],consumed=hid)
+    # Session B exists only to prove formal predecessor-handoff consumption/continuity; it intentionally requires no second artifact.
+    s2['required_artifact_types']=[]
+    s2['planned_activity']='Consume and reconcile predecessor handoff, prove seamless successor activation, then close with its own formal handoff.'
+    s2['exit_criteria']=['Predecessor handoff is consumed and reconciled.','Successor can activate without conversation-memory dependency.','Successor produces its own terminal handoff.']
+    sessions[target]=s2
     check(s2['consumed_handoff_id']==h1['handoff_id'],'successor explicitly consumes predecessor handoff')
     check(not session_errors(s2,project,mastery,sessions),'PLANNED successor validates with consumed handoff link')
     s2['status']='READY'; c2=chat_fixture(s2); check(not session_errors(s2,project,mastery,sessions) and not chat_errors(c2,s2),'successor READY/PLANNED chat validates after handoff consumption')
@@ -76,7 +80,7 @@ def main():
 
     with tempfile.TemporaryDirectory() as d:
         for name,obj in [('session-1.json',s1),('chat-1.json',c1),('handoff-1.json',h1),('session-2.json',s2),('chat-2.json',c2),('handoff-2.json',h2),('semantic.json',sem),('artifact.json',art)]: Path(d,name).write_text(json.dumps(obj,indent=2)+'\n')
-        Path(d,'artifact.md').write_text(md1); check(len(list(Path(d).iterdir()))==8,'dry-run continuity outputs are reproducible')
+        Path(d,'artifact.md').write_text(md1); check(len(list(Path(d).iterdir()))==9,'dry-run continuity outputs are reproducible')
     print('END-TO-END SEMANTIC + CONTROL + CHAT + HANDOFF DRY RUN PASS')
 
 if __name__=='__main__': main()
