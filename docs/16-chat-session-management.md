@@ -1,6 +1,6 @@
 # ChatGPT Chat Session Management
 
-Status: **APPROVED v1 — study start remains frozen**
+Status: **APPROVED v1.1 — study start remains frozen**
 
 ## Purpose
 
@@ -41,13 +41,15 @@ Each controlled chat records:
 - `startup_repository_snapshot_id`;
 - `status` (`PLANNED|OPEN|PAUSED|CLOSED|SUPERSEDED`);
 - `opened_at` / `closed_at` where applicable;
-- `handoff_required`;
-- `handoff_target_session_id` where applicable;
+- `handoff_required=true`;
+- `handoff_target_session_id` when an exact successor has already been selected;
 - `resume_anchor` for paused chats.
 
 Canonical representation:
 
 `sessions/<session-id>/chat.json`
+
+Formal continuity is governed by `docs/19-session-handoff-continuity.md` and canonical `handoff.json`.
 
 ## Creation rule
 
@@ -62,6 +64,7 @@ Before opening the chat, the coordinator must resolve from GitHub:
 - required artifacts/evidence;
 - exit criteria;
 - valid control snapshot;
+- predecessor handoff and its consumption state where applicable;
 - study-start permission.
 
 If study start is frozen/blocked, no real study chat may be created.
@@ -75,7 +78,7 @@ At the first learner interaction in the chat, ChatGPT should present a concise o
 - source/activity mode;
 - expected exit condition.
 
-It should not dump governance metadata unless requested.
+For a successor session, ChatGPT must first consume/reconcile the predecessor handoff against current GitHub state. It should not dump administrative continuity metadata unless requested or a conflict requires explanation.
 
 ## Single-purpose scope enforcement
 
@@ -123,7 +126,7 @@ The purpose should normally map to one meaningful learning/assessment/lab outcom
 
 ## Pause/resume
 
-If the chat is paused, `chat.json` and `session.json` must record enough resume state to continue without rereading the full conversation:
+If the chat is paused and will resume as the same controlled chat, `chat.json` and `session.json` must record enough resume state to continue without rereading the full conversation:
 
 - last completed activity;
 - next activity;
@@ -135,46 +138,55 @@ If the chat is paused, `chat.json` and `session.json` must record enough resume 
 
 On resume, ChatGPT reads GitHub state first. Conversation history is supporting context only.
 
+A normal pause/resume does not create a successor handoff. If work is transferred to a new controlled session/chat instead, the source session must produce the formal handoff required by `docs/19-session-handoff-continuity.md`.
+
 ## Chat closure
 
-A chat is closed when:
-
-- its repository session reaches `COMPLETED`, `ABORTED`, or `SUPERSEDED`; or
-- work is intentionally transferred to a different authorized session/chat.
+A chat is closed when its repository session reaches `COMPLETED`, `ABORTED`, or `SUPERSEDED`, or when a governed transfer makes that session terminal.
 
 Closure behavior:
 
 1. verify session completion/exception state;
 2. ensure canonical session/artifact/state writes are complete;
 3. create/update compact session summary;
-4. set `chat.status=CLOSED`;
-5. record the next permitted session/action.
+4. create and validate mandatory `handoff.json`;
+5. set `chat.status=CLOSED` (or `SUPERSEDED` where appropriate);
+6. record exact target session only if already selected; otherwise use the pending-selection disposition in the handoff;
+7. record the next permitted action.
 
-A learner saying “done” does not itself close the controlled chat if completion requirements remain.
+A learner saying “done” does not itself close the controlled chat if completion or handoff requirements remain.
 
-## Handoff to a new chat
+## Mandatory formal handoff
 
-A handoff must state:
+Every terminal controlled study chat must have a formal handoff. This is not conditional on whether a successor has already been selected.
 
-- source session/chat;
-- reason for split;
-- target purpose;
-- relevant artifact/session IDs;
-- unresolved items transferred;
-- what is deliberately not transferred.
+The handoff must preserve enough authoritative continuity that a brand-new ChatGPT conversation with no useful prior chat history can continue safely.
 
-Do not require the learner to copy long conversation transcripts between chats.
+If no successor has yet been selected, the handoff records `NEXT_SESSION_PENDING_COORDINATOR_SELECTION`; the coordinator must not invent a target merely to close the chat.
+
+## Successor startup
+
+If a new session has `predecessor_session_id`, it must record `consumed_handoff_id` for that predecessor before becoming `ACTIVE`.
+
+Startup order:
+
+1. read predecessor `handoff.json`;
+2. reload current repository authorities/state;
+3. reconcile handoff assumptions with current state/freshness;
+4. resolve discrepancies in favor of current GitHub authority;
+5. record handoff consumption;
+6. only then activate the new chat/session purpose.
 
 ## Historical retrieval
 
 To revisit old work:
 
 1. search by session ID/unit/topic/artifact in GitHub;
-2. read `session.json`, `chat.json`, and session summary;
+2. read `session.json`, `chat.json`, `handoff.json`, and session summary;
 3. consult approved artifacts/evidence;
 4. use old chat history only if additional conversational nuance is useful.
 
-A new review/remediation purpose normally receives a new session/chat while linking the historical session.
+A new review/remediation purpose normally receives a new session/chat while linking the historical session/handoff.
 
 ## Non-study chats
 
@@ -184,4 +196,4 @@ When study is unfrozen, the coordinator must keep these management conversations
 
 ## Administrative burden
 
-Chat title, chat/session mapping, scope, pause/resume metadata, closure, and handoff records are coordinator responsibilities. The learner should not manually maintain them during normal operation.
+Chat title, chat/session mapping, scope, pause/resume metadata, closure, handoff generation, and handoff consumption are coordinator responsibilities. The learner should not manually maintain them during normal operation.
