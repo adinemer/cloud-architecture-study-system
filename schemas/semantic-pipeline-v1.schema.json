@@ -1,0 +1,92 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/adinemer/cloud-architecture-study-system/schemas/semantic-pipeline-v1.schema.json",
+  "title": "Semantic Pipeline Integrity Report v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version","packet_id","source_sections","extraction_claims","enrichment_claims","conflicts","quality_scores","repeatability","semantic_status"],
+  "properties": {
+    "schema_version": {"const":"1.0.0"},
+    "packet_id": {"type":"string","minLength":1},
+    "source_sections": {
+      "type":"array","minItems":1,
+      "items": {
+        "type":"object","additionalProperties":false,
+        "required":["section_id","architecture_significant","processing_status","reason","extracted_claim_ids"],
+        "properties": {
+          "section_id":{"type":"string","minLength":1},
+          "architecture_significant":{"type":"boolean"},
+          "processing_status":{"enum":["PROCESSED","INTENTIONALLY_EXCLUDED","FAILED","MISSING"]},
+          "reason":{"type":["string","null"]},
+          "extracted_claim_ids":{"type":"array","items":{"type":"string","minLength":1},"uniqueItems":true}
+        }
+      }
+    },
+    "extraction_claims": {
+      "type":"array",
+      "items": {
+        "type":"object","additionalProperties":false,
+        "required":["claim_id","label","text","section_id","locator","severity","human_reviewed"],
+        "properties": {
+          "claim_id":{"type":"string","minLength":1},
+          "label":{"enum":["PROVIDER_FACT","PROVIDER_RECOMMENDATION"]},
+          "text":{"type":"string","minLength":1},
+          "section_id":{"type":"string","minLength":1},
+          "locator":{"type":"string","minLength":1},
+          "severity":{"enum":["LOW","MEDIUM","HIGH"]},
+          "human_reviewed":{"type":"boolean"}
+        }
+      }
+    },
+    "enrichment_claims": {
+      "type":"array",
+      "items": {
+        "type":"object","additionalProperties":false,
+        "required":["claim_id","label","text","support_claim_ids","rationale"],
+        "properties": {
+          "claim_id":{"type":"string","minLength":1},
+          "label":{"enum":["CROSS_SOURCE_SYNTHESIS","ARCHITECTURAL_INFERENCE","EXAM_INTERPRETATION"]},
+          "text":{"type":"string","minLength":1},
+          "support_claim_ids":{"type":"array","minItems":1,"items":{"type":"string","minLength":1},"uniqueItems":true},
+          "rationale":{"type":"string","minLength":1}
+        }
+      }
+    },
+    "conflicts": {
+      "type":"array",
+      "items": {
+        "type":"object","additionalProperties":false,
+        "required":["conflict_id","severity","status","description","resolution"],
+        "properties": {
+          "conflict_id":{"type":"string","minLength":1},
+          "severity":{"enum":["LOW","MEDIUM","HIGH"]},
+          "status":{"enum":["RESOLVED","OPEN","BLOCKED"]},
+          "description":{"type":"string","minLength":1},
+          "resolution":{"type":["string","null"]}
+        }
+      }
+    },
+    "quality_scores": {
+      "type":"object","additionalProperties":false,
+      "required":["factual_fidelity","architecture_completeness","qualifier_preservation","unsupported_claim_avoidance","locator_quality","inference_separation"],
+      "properties": {
+        "factual_fidelity":{"type":"number","minimum":0,"maximum":5},
+        "architecture_completeness":{"type":"number","minimum":0,"maximum":5},
+        "qualifier_preservation":{"type":"number","minimum":0,"maximum":5},
+        "unsupported_claim_avoidance":{"type":"number","minimum":0,"maximum":5},
+        "locator_quality":{"type":"number","minimum":0,"maximum":5},
+        "inference_separation":{"type":"number","minimum":0,"maximum":5}
+      }
+    },
+    "repeatability": {
+      "type":"object","additionalProperties":false,
+      "required":["runs_compared","material_semantic_drift","notes"],
+      "properties": {
+        "runs_compared":{"type":"integer","minimum":2},
+        "material_semantic_drift":{"type":"boolean"},
+        "notes":{"type":"string","minLength":1}
+      }
+    },
+    "semantic_status":{"enum":["PASS","FAIL","NEEDS_REVIEW"]}
+  }
+}
