@@ -1,6 +1,6 @@
 # Pre-Unfreeze Hardening Report — 2026-08-09
 
-Status: **PASS CANDIDATE — final-state CI still required; study remains frozen**
+Status: **PASS — technically READY_TO_START; study remains frozen**
 
 ## Scope
 
@@ -52,8 +52,6 @@ Replacement pipeline run `31315301223`, job `93249455773`, passed all stages and
 
 `bacbc5169f0cdef741e90e5b2fd2e5cb9d1d18cbef511489e18167073759615a`
 
-`state/pipeline-health.json` was advanced to v1.1.0 and records this GREEN certification.
-
 ### 2. Initial two-session continuity dry-run failure
 
 Control-plane run `31315421766`, job `93249749810`, passed pipeline-health, semantic regressions, project/session/chat checks, handoff regressions, governance regressions, readiness audit, and change records, then failed the final successor-completion assertion.
@@ -84,23 +82,35 @@ The control-plane success includes:
 - two-session end-to-end semantic + chat + handoff dry run;
 - unchanged learner mastery and preserved study-start freeze.
 
+## Exact final READY_TO_START validation
+
+After top-level architecture/README reconciliation and both hardening gates were set to PASS, commit `1e8c74e9732a6b68c0336a20e1156aea129f61b2` was validated again:
+
+- pipeline-smoke run `31315611758`, job `93250242281`: **PASS**;
+- artifact-qa run `31315611761`: **PASS**;
+- control-plane run `31315611757`: **PASS**.
+
+The final pipeline run re-fetched current AWS material and passed every hardened operational and semantic stage. `state/pipeline-health.json` now records this latest successful run, state version 1.1.1, GREEN fingerprint:
+
+`bacbc5169f0cdef741e90e5b2fd2e5cb9d1d18cbef511489e18167073759615a`
+
 ## Change control
 
 `CHG-2026-004` records this C4 hardening change and the required validation set.
 
-## Final-state criterion
+## Final state
 
-The project may return from `READY_FOR_DRY_RUN` to technical `READY_TO_START` only after an additional CI pass against the exact final branch state confirms:
+The project is technically allowed to be `READY_TO_START` because:
 
-- pipeline-smoke PASS;
-- artifact QA PASS;
-- control-plane PASS;
-- semantic_pipeline_integrity PASS;
-- mandatory_session_handover PASS;
-- study_start_approval remains BLOCKED;
+- pipeline-smoke is PASS on the current hardened fingerprint;
+- artifact QA is PASS;
+- control-plane is PASS;
+- `semantic_pipeline_integrity=PASS`;
+- `mandatory_session_handover=PASS`;
+- `study_start_approval=BLOCKED` remains intact;
 - no real learner session/chat exists;
 - mastery remains unearned.
 
 ## Study-start boundary
 
-This hardening is a prerequisite for a future unfreeze request. It does not itself unfreeze study.
+This hardening is a prerequisite for a future unfreeze request. It does not itself unfreeze study. Real SAP-C02 study remains prohibited until separate explicit user approval.
