@@ -1,0 +1,44 @@
+{
+  "change_id": "CHG-2026-001",
+  "schema_version": "1.0.0",
+  "change_class": "C4",
+  "timestamp": "2026-08-09T09:40:00Z",
+  "initiator": "ChatGPT coordinator under user-approved control-work implementation",
+  "reason": "Establish the initial approved progress/mastery, session-management, repository-first coordinator, change/freshness, and control-plane validation baseline before study starts.",
+  "old_version_or_hash": null,
+  "new_version_or_hash": "control-plane-v1",
+  "affected_items": [
+    "docs/09-progress-mastery-spec.md",
+    "docs/11-study-session-management.md",
+    "docs/12-coordinator-governance.md",
+    "docs/13-change-control-freshness.md",
+    "schemas/session-v1.schema.json",
+    "schemas/state-v1.schema.json",
+    "schemas/change-v1.schema.json",
+    "state/project-state.json",
+    "state/mastery-state.json",
+    "qa/validate_control_plane.py",
+    "qa/control_snapshot.py",
+    "qa/control_regression.py",
+    "qa/end_to_end_dry_run.py",
+    ".github/workflows/control-plane.yml"
+  ],
+  "affected_units": [],
+  "affected_objectives": [],
+  "affected_artifacts": [],
+  "affected_sessions": [],
+  "required_qa": [
+    "Fedora control-plane workflow",
+    "State/schema validation",
+    "Negative governance regression suite",
+    "Synthetic end-to-end control dry run"
+  ],
+  "migration_actions": [
+    "Use repository-first coordinator preflight for all future controlled study work.",
+    "Create all real study sessions under session schema v1.",
+    "Maintain mastery/project state in GitHub rather than conversation memory."
+  ],
+  "approval_status": "APPROVED",
+  "approved_by": "User approval granted in conversation on 2026-08-09",
+  "effective_at": "2026-08-09T09:40:00Z"
+}
