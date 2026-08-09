@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/adinemer/cloud-architecture-study-system/schemas/pipeline-health-v1.schema.json",
+  "title": "Extraction Pipeline Health v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "state_type","schema_version","state_version","health","pipeline_fingerprint",
+    "validated_commit_sha","workflow_name","workflow_run_id","workflow_job_id",
+    "validated_at","required_stages","last_failure","next_permitted_action"
+  ],
+  "properties": {
+    "state_type": {"const": "PIPELINE_HEALTH"},
+    "schema_version": {"const": "1.0.0"},
+    "state_version": {"type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"},
+    "health": {"enum": ["GREEN","VALIDATING","FAILED","STALE","BLOCKED"]},
+    "pipeline_fingerprint": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "validated_commit_sha": {"type": "string", "pattern": "^[a-f0-9]{40}$"},
+    "workflow_name": {"type": "string", "minLength": 1},
+    "workflow_run_id": {"type": "integer", "minimum": 1},
+    "workflow_job_id": {"type": "integer", "minimum": 1},
+    "validated_at": {"type": "string", "format": "date-time"},
+    "required_stages": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+    "last_failure": {"type": ["object","null"]},
+    "next_permitted_action": {"type": "string", "minLength": 1}
+  }
+}
