@@ -12,6 +12,7 @@ REQUIRED_AUTHORITIES = {
     'docs/08-quality-assurance-spec.md','docs/09-progress-mastery-spec.md','docs/11-study-session-management.md',
     'docs/12-coordinator-governance.md','docs/13-change-control-freshness.md','docs/14-study-operating-routine.md',
     'docs/15-study-tool-policy.md','docs/16-chat-session-management.md','docs/17-pipeline-health-spec.md',
+    'docs/18-semantic-pipeline-integrity.md','docs/19-session-handoff-continuity.md',
     'aws/sap-c02/objective-map.md','state/project-state.json','state/mastery-state.json','state/pipeline-health.json'
 }
 GOVERNANCE_HASH_FILES = REQUIRED_AUTHORITIES - {'aws/sap-c02/objective-map.md','state/project-state.json','state/mastery-state.json'}
