@@ -1,0 +1,76 @@
+name: artifact-qa
+
+on:
+  push:
+    paths:
+      - 'schemas/**'
+      - 'qa/**'
+      - 'artifacts/**'
+      - 'prompts/artifact-v1.md'
+      - 'docs/07-study-artifact-schemas.md'
+      - 'docs/08-quality-assurance-spec.md'
+      - '.github/workflows/artifact-qa.yml'
+  pull_request:
+    paths:
+      - 'schemas/**'
+      - 'qa/**'
+      - 'artifacts/**'
+      - 'prompts/artifact-v1.md'
+      - 'docs/07-study-artifact-schemas.md'
+      - 'docs/08-quality-assurance-spec.md'
+      - '.github/workflows/artifact-qa.yml'
+  workflow_dispatch:
+
+jobs:
+  artifact-qa:
+    runs-on: ubuntu-latest
+    container:
+      image: fedora:latest
+    steps:
+      - name: Install dependencies
+        run: dnf -y install git python3 python3-pip
+
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Create environment
+        run: |
+          python3 -m venv .venv
+          . .venv/bin/activate
+          python -m pip install --upgrade pip
+          python -m pip install 'jsonschema[format]'
+
+      - name: Validate canonical fixture
+        run: |
+          . .venv/bin/activate
+          python qa/validate_artifacts.py qa/fixtures/valid-architecture-note.json
+
+      - name: Run artifact regression suite
+        run: |
+          . .venv/bin/activate
+          PYTHONPATH=qa python qa/artifact_regression.py
+
+      - name: Verify deterministic render
+        run: |
+          . .venv/bin/activate
+          python qa/render_artifact.py qa/fixtures/valid-architecture-note.json --out /tmp/a.md
+          python qa/render_artifact.py qa/fixtures/valid-architecture-note.json --out /tmp/b.md
+          python - <<'PY'
+          from pathlib import Path
+          a=Path('/tmp/a.md').read_bytes(); b=Path('/tmp/b.md').read_bytes()
+          assert a == b
+          assert b'GENERATED FILE' in a
+          PY
+
+      - name: Validate repository artifacts if present
+        run: |
+          . .venv/bin/activate
+          python - <<'PY'
+          from pathlib import Path
+          import subprocess, sys
+          files=sorted(Path('artifacts').rglob('*.json')) if Path('artifacts').exists() else []
+          if files:
+              subprocess.run([sys.executable,'qa/validate_artifacts.py',*[str(x) for x in files]],check=True)
+          else:
+              print('No production artifacts yet; expected before study starts.')
+          PY
