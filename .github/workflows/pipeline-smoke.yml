@@ -7,6 +7,12 @@ on:
       - 'prompts/**'
       - 'qa/**'
       - '.github/workflows/pipeline-smoke.yml'
+  pull_request:
+    paths:
+      - 'pipeline/**'
+      - 'prompts/**'
+      - 'qa/**'
+      - '.github/workflows/pipeline-smoke.yml'
   workflow_dispatch:
 
 jobs:
