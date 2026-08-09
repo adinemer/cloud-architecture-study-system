@@ -15,6 +15,8 @@ on:
       - 'changes/**'
       - 'qa/validate_control_plane.py'
       - 'qa/control_regression.py'
+      - 'qa/control_snapshot.py'
+      - 'qa/end_to_end_dry_run.py'
       - '.github/workflows/control-plane.yml'
   pull_request:
     paths:
@@ -30,6 +32,8 @@ on:
       - 'changes/**'
       - 'qa/validate_control_plane.py'
       - 'qa/control_regression.py'
+      - 'qa/control_snapshot.py'
+      - 'qa/end_to_end_dry_run.py'
       - '.github/workflows/control-plane.yml'
   workflow_dispatch:
 
@@ -72,3 +76,7 @@ jobs:
               assert not errs, (p,[e.message for e in errs])
           print(f'PASS change records ({len(files)})')
           PY
+      - name: Run synthetic end-to-end study control dry run
+        run: |
+          . .venv/bin/activate
+          PYTHONPATH=qa python qa/end_to_end_dry_run.py
