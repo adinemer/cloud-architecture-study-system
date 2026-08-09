@@ -6,61 +6,62 @@ A controlled, AI-assisted study system for professional cloud architecture certi
 
 **AWS Certified Solutions Architect – Professional (SAP-C02)**
 
-The pilot has two equal goals:
+Equal goals:
 
 1. Pass the certification exam.
 2. Improve professional cloud-architecture knowledge, judgment, and hands-on skill.
 
 ## Current phase
 
-**Pre-study control system complete — real certification study has not started yet.**
+**Final pre-study readiness audit in progress. Real certification study has not started.**
 
-Completed gates:
+Implemented control areas:
 
-- ✅ authoritative AWS SAP-C02 resource inventory;
-- ✅ controlled study sequence and read/extract/reference/lab policy;
-- ✅ Fedora-compatible extraction pipeline pilot and benchmark;
-- ✅ study-artifact schemas, provenance, QA, deterministic rendering, and anti-drift CI;
-- ✅ evidence-based progress/mastery model;
-- ✅ controlled study-session lifecycle and historical session records;
-- ✅ repository-first ChatGPT coordinator governance;
-- ✅ change-control/versioning/freshness policy;
-- ✅ machine-readable project/mastery/session/change schemas;
-- ✅ cross-file control-plane validation and negative regression tests;
-- ✅ synthetic end-to-end study control dry run in Fedora CI;
-- ✅ final READY_TO_START integrity validation.
-
-Still required before real study starts:
-
-- **explicit user study-start approval under the charter.**
+- authoritative AWS SAP-C02 resource inventory and objective map;
+- architecture-first study sequence and read/extract/reference/lab policy;
+- Fedora-compatible extraction pipeline with explicit `GREEN` fingerprint health state;
+- grounded extraction before architectural enrichment;
+- study-artifact schemas, provenance, QA, deterministic rendering, and anti-drift CI;
+- evidence-based E/A/H progress/mastery model;
+- controlled study-session lifecycle and resumable history;
+- single-purpose ChatGPT chat/session contracts;
+- repository-first ChatGPT governance for substantive recommendations and actions;
+- SUN–THU 08:00–16:00 work-aware study/retention routine with FRI–SAT weekend;
+- approved study-tool policy and local-only personal-note default;
+- change-control/versioning/freshness policy;
+- machine-readable project/mastery/session/chat/change/pipeline-health schemas;
+- negative regressions and synthetic end-to-end session/chat dry run.
 
 ## Governing principle
 
-Provider material is the source of truth. Versioned specifications and state in this repository control the process. ChatGPT must consult the authoritative repository state before controlled study decisions or artifact creation; conversation context and model memory do not override GitHub.
+Provider material is the source of truth for provider/exam facts. Versioned specifications and current state in this repository control the process. ChatGPT must resolve GitHub authority/state before substantive study-system recommendations or controlled actions; conversation context/model memory do not override it.
 
-## Session trust model
+## Pipeline trust model
 
-A ChatGPT conversation is an interaction surface, not the authoritative study record. Real study work is organized into schema-controlled sessions under `sessions/`, with controlled creation, pause/resume, completion, artifact/evidence links, mastery updates, and retrieval history.
+Trusted extraction/enrichment is allowed only when `state/pipeline-health.json` is `GREEN` and its recorded fingerprint matches current extraction-affecting files. Failed/stale pipeline state blocks downstream trusted work until a complete successful validation restores green.
+
+## Session/chat trust model
+
+A ChatGPT conversation is an interaction surface, not authoritative state. Each real controlled study chat has one purpose and maps to one repository session under `sessions/`. A session control snapshot is bound to current governance hashes, project/mastery state, objective map, prompt/schema versions, and pipeline-health fingerprint.
 
 ## Artifact trust model
 
 Canonical study artifacts are schema-valid JSON. Markdown is rendered deterministically from JSON. Only artifacts with approved lifecycle state, passing QA, valid provenance, and required human review are trusted study material.
 
-## Repository status
+## Study-start boundary
 
-- System version: `1.0-prestudy`
-- Pilot: `AWS SAP-C02`
-- Study status: `READY_TO_START` (study-start approval pending)
-- Resource inventory: `APPROVED_V1`
-- Study sequence/source policy: `APPROVED_V1`
-- Extraction pipeline: `APPROVED_V1_WITH_GUARDRAILS`
-- Artifact/QA controls: `APPROVED_V1`
-- Progress/mastery controls: `APPROVED_V1`
-- Session management: `APPROVED_V1`
-- Coordinator governance: `APPROVED_V1`
-- Change/freshness controls: `APPROVED_V1`
-- End-to-end dry run: `PASS`
+Technical readiness does not itself authorize study. The explicit user study-start gate is independent and currently remains blocked/frozen.
 
 Authoritative current state: [`state/project-state.json`](state/project-state.json).
 
-See [`docs/`](docs/), [`schemas/`](schemas/), [`state/`](state/), [`pipeline/`](pipeline/), and [`qa/`](qa/).
+## Repository map
+
+- [`docs/`](docs/) — governance and operating specifications
+- [`aws/sap-c02/`](aws/sap-c02/) — provider inventory/objective mapping
+- [`schemas/`](schemas/) — machine contracts
+- [`state/`](state/) — authoritative project/mastery/pipeline state
+- [`pipeline/`](pipeline/) — deterministic source ingestion/bundling
+- [`prompts/`](prompts/) — versioned AI contracts
+- [`qa/`](qa/) — validation, regression, pilot, dry-run, readiness evidence
+- [`sessions/`](sessions/) — controlled learner session/chat history when study begins
+- [`changes/`](changes/) — governed change records
