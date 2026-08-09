@@ -1,14 +1,14 @@
 {
   "state_type": "PIPELINE_HEALTH",
   "schema_version": "1.0.0",
-  "state_version": "1.1.0",
+  "state_version": "1.1.1",
   "health": "GREEN",
   "pipeline_fingerprint": "bacbc5169f0cdef741e90e5b2fd2e5cb9d1d18cbef511489e18167073759615a",
-  "validated_commit_sha": "9ca02f7f4d19776c2548b49c50b886fe4751d9be",
+  "validated_commit_sha": "1e8c74e9732a6b68c0336a20e1156aea129f61b2",
   "workflow_name": "pipeline-smoke",
-  "workflow_run_id": 31315301223,
-  "workflow_job_id": 93249455773,
-  "validated_at": "2026-08-09T13:15:22Z",
+  "workflow_run_id": 31315611758,
+  "workflow_job_id": 93250242281,
+  "validated_at": "2026-08-09T13:31:00Z",
   "required_stages": [
     "Fedora runtime and dependencies",
     "AWS provider-native Markdown acquisition with provenance hashes",
@@ -25,7 +25,7 @@
   ],
   "last_failure": {
     "status": "superseded_by_successful_validation",
-    "note": "Pre-unfreeze hardening initially failed pipeline-smoke run 31315170474 because an architecture sentinel compared the current AWS lowercase phrase 'transit gateway' case-sensitively as 'Transit Gateway'. The AWS boundary remained present. The sentinel test was corrected to case-insensitive matching and expanded to six architecture-significant constraints; replacement run 31315301223 passed every stage and strict semantic regression."
+    "note": "Pre-unfreeze hardening initially failed pipeline-smoke run 31315170474 because a new architecture sentinel used case-sensitive matching for a current AWS phrase. The boundary remained present. The test was corrected without removing the boundary and replacement runs 31315301223 and final exact-state run 31315611758 passed every hardened stage."
   },
-  "next_permitted_action": "Run the full control-plane, handoff-continuity, readiness, artifact, and end-to-end validations against this GREEN fingerprint. Trusted extraction/enrichment additionally requires per-packet semantic integrity PASS. Real study remains separately frozen."
+  "next_permitted_action": "Hardened pipeline is GREEN for the current fingerprint. Trusted extraction/enrichment additionally requires per-packet semantic-integrity PASS. Real study remains frozen until separate explicit study-start approval."
 }
