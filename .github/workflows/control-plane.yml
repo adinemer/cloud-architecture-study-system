@@ -71,7 +71,8 @@ jobs:
       - name: Validate mandatory handoff continuity
         run: |
           . .venv/bin/activate
-          python qa/validate_handoffs.py
+          PYTHONPATH=qa python qa/validate_handoffs.py
+          PYTHONPATH=qa python qa/handoff_regression.py
       - name: Run governance negative regressions
         run: |
           . .venv/bin/activate
