@@ -1,0 +1,74 @@
+name: control-plane
+
+on:
+  push:
+    paths:
+      - 'docs/09-progress-mastery-spec.md'
+      - 'docs/11-study-session-management.md'
+      - 'docs/12-coordinator-governance.md'
+      - 'docs/13-change-control-freshness.md'
+      - 'schemas/session-v1.schema.json'
+      - 'schemas/state-v1.schema.json'
+      - 'schemas/change-v1.schema.json'
+      - 'state/**'
+      - 'sessions/**'
+      - 'changes/**'
+      - 'qa/validate_control_plane.py'
+      - 'qa/control_regression.py'
+      - '.github/workflows/control-plane.yml'
+  pull_request:
+    paths:
+      - 'docs/09-progress-mastery-spec.md'
+      - 'docs/11-study-session-management.md'
+      - 'docs/12-coordinator-governance.md'
+      - 'docs/13-change-control-freshness.md'
+      - 'schemas/session-v1.schema.json'
+      - 'schemas/state-v1.schema.json'
+      - 'schemas/change-v1.schema.json'
+      - 'state/**'
+      - 'sessions/**'
+      - 'changes/**'
+      - 'qa/validate_control_plane.py'
+      - 'qa/control_regression.py'
+      - '.github/workflows/control-plane.yml'
+  workflow_dispatch:
+
+jobs:
+  control-plane:
+    runs-on: ubuntu-latest
+    container:
+      image: fedora:latest
+    steps:
+      - name: Install dependencies
+        run: dnf -y install git python3 python3-pip
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Create environment
+        run: |
+          python3 -m venv .venv
+          . .venv/bin/activate
+          python -m pip install --upgrade pip
+          python -m pip install 'jsonschema[format]'
+      - name: Validate authoritative state and sessions
+        run: |
+          . .venv/bin/activate
+          python qa/validate_control_plane.py
+      - name: Run governance negative regressions
+        run: |
+          . .venv/bin/activate
+          PYTHONPATH=qa python qa/control_regression.py
+      - name: Validate change records
+        run: |
+          . .venv/bin/activate
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          from jsonschema import Draft202012Validator, FormatChecker
+          schema=json.loads(Path('schemas/change-v1.schema.json').read_text())
+          v=Draft202012Validator(schema,format_checker=FormatChecker())
+          files=sorted(Path('changes').rglob('*.json')) if Path('changes').exists() else []
+          for p in files:
+              d=json.loads(p.read_text()); errs=list(v.iter_errors(d))
+              assert not errs, (p,[e.message for e in errs])
+          print(f'PASS change records ({len(files)})')
+          PY
